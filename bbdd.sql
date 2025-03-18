@@ -1,21 +1,21 @@
 CREATE TABLE admins (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name TEXT NOT NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE professors (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   admin_id BIGINT,
   name TEXT NOT NULL,
   FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE students (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   professor_id BIGINT,
   name TEXT NOT NULL,
   FOREIGN KEY (professor_id) REFERENCES professors(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE publications (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -24,14 +24,14 @@ CREATE TABLE publications (
   content TEXT NOT NULL,
   published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE courses (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   professor_id BIGINT,
   name TEXT NOT NULL,
   FOREIGN KEY (professor_id) REFERENCES professors(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE course_students (
   course_id BIGINT,
@@ -39,7 +39,7 @@ CREATE TABLE course_students (
   PRIMARY KEY (course_id, student_id),
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE messages (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -47,12 +47,12 @@ CREATE TABLE messages (
   content TEXT NOT NULL,
   sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE evaluations (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   name TEXT NOT NULL
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE grades (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -63,14 +63,14 @@ CREATE TABLE grades (
   FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
   FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
   FOREIGN KEY (evaluation_id) REFERENCES evaluations(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB;
 
 CREATE TABLE users (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   password BLOB NOT NULL,
   role ENUM('admin', 'professor', 'student') NOT NULL
-);
+) ENGINE=InnoDB;
 
 ALTER TABLE admins ADD COLUMN user_id BIGINT, ADD FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE professors ADD COLUMN user_id BIGINT, ADD FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
