@@ -75,3 +75,6 @@ CREATE TABLE notas (
   FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE,
   FOREIGN KEY (evaluacion_id) REFERENCES evaluaciones(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+INSERT INTO users (email,password,rol) VALUES("admin@gmail.com",AES_ENCRYPT("1234","claveultrasecreta"),"admin");
+INSERT INTO admins (nombre,user_id) VALUES("admin1",1);
