@@ -2,7 +2,7 @@
 if (isset($_POST["enviar"])) {
    extract($_POST);
    try {
-      require("./conexion.php");
+      require("./../includes/conexion.php");
       //EVITAR INYECCION DE CODIGO
       $correo = mysqli_real_escape_string($conexion, $correo);
       $clave = mysqli_real_escape_string($conexion, $clave);
@@ -11,9 +11,18 @@ if (isset($_POST["enviar"])) {
          $query = "SELECT * FROM users WHERE email = '$correo' AND AES_DECRYPT(password,'claveultrasecreta') = '$clave';";
          $resultado = mysqli_query($conexion, $query);
          if (mysqli_num_rows($resultado) == 1) {
-            echo "se logeó con excito";
+            session_destroy();
+            session_start();
+            $resultado = mysqli_fetch_array($resultado);
+            $_SESSION["logged"] = true;
+            $_SESSION["user_id"] = $resultado["id"];
+            $_SESSION["usuario"] = $resultado["email"];
+            $_SESSION["rol"] = $resultado["rol"];
+            header("Location: ./../../index.php?status=success");
+            exit();
          } else {
-            echo "nada mano";
+            header("Location: ./../../index.php?status=error");
+            exit();
          }
       }
    } catch (Throwable $t) {
@@ -21,6 +30,6 @@ if (isset($_POST["enviar"])) {
       echo "<p>" . $t->getCode() . "</p>";
    }
 } else {
-   header("./../index.php");
+   header("Location: ./../../index.php");
    exit();
 }
