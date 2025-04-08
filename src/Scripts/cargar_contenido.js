@@ -9,7 +9,7 @@ function obtenerContenido(tipoConsulta) {
    }
    consultaAnterior = tipoConsulta
    $.ajax({
-      url: "./src/controllers/contenido_landing.php",
+      url: "./src/models/homeModel.php",
       type: "GET",
       dataType: "json",
       data: { tipo: tipoConsulta },
@@ -38,23 +38,22 @@ function EstilosDefault() {
 }
 
 function mostrarPublicaciones(data) {
-   $("#contenido").html("")
+   let html = "";
    data.forEach((x) => {
-      let aux = $("#contenido").html()
-      aux += `<div class=" publicacion shadow bg-orange-100 rounded-lg p-4  mb-4">
-      <h2 class="text-lg text-black font-semibold">${x.titulo}</h2>
-      <p class="text-gray-700">${x.contenido}</p>`
-      if (x.img) {
-         let imgs = x.img.split(",").filter(txt => txt.length != 0)
-         let media = `<div class='flex gap-2'>`
-         imgs.forEach(x => {
-            media += `<img class='flex-1 overflow-hidden mx-auto w-auto h-auto rounded-lg my-4' src='./src/media/img/${x}'>`
-         });
-         aux += media + "</div>"
-      }
-      aux += "</div>"
-      $("#contenido").html(aux)
+      html += `
+      <div class="publicacion shadow bg-orange-100 rounded-lg p-4 mb-4">
+         <h2 class="text-lg text-black font-semibold">${x.titulo}</h2>
+         <p class="text-gray-700">${x.contenido}</p>
+            ${x.img ? `
+            <div class='flex gap-2'>
+               ${x.img.split(",").filter(txt => txt.length != 0).map(img => `
+               <img class='flex-1 overflow-hidden mx-auto w-auto h-auto rounded-lg my-4' src='./media/img/${img}'>
+               `).join('')}
+            </div>
+            ` : ''}
+      </div>`;
    });
+   $("#contenido").html(html);
 }
 
 function EstilosPublicaciones() {
@@ -74,13 +73,13 @@ function EstilosPublicaciones() {
 
 function mostrarGrupos(data) {
    $("#contenido").html("")
+   let html = "";
    data.forEach((x) => {
-      let aux = $("#contenido").html()
-      aux += `<div div class="bg-white rounded-lg p-4  mb-4" >
+      html += `<div div class="bg-orange-100 rounded-lg p-4  mb-4" >
          <h2 class="text-lg text-black font-semibold">${x.nombre}</h2>
    </div> `
-      $("#contenido").html(aux)
    });
+   $("#contenido").html(html)
 }
 
 function EstilosGrupos() {
