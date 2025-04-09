@@ -18,11 +18,16 @@
    <main class="flex-auto bg-gray-100 p-4">
       <div class="container mx-auto">
          <div class="max-w-7xl bg-gray-100 rounded-md mx-auto">
-            <div class="flex p-4 bg-white rounded-lg mb-5 mt-2">
-               <div>
-                  <img src="" alt="">
+            <div class="flex p-4 bg-white rounded-lg mb-5 mt-2 flex-wrap">
+               <div class="sm:w-full md:w-2xs flex justify-center">
+                  <img src="<?php echo URL . 'media/img/' . $userData['foto']; ?>" alt="">
                </div>
-               <div>
+               <div class="flex flex-col px-2 py-4">
+                  <div class="flex-1">
+                     <p><span>Nombre: </span><?php echo $rolData['nombre'] ?></p>
+                     <p><span>Apellidos: </span><?php echo $rolData['apellidos'] ?></p>
+                     <p><span>Correo: </span><?php echo $userData['email'] ?></p>
+                  </div>
                   <form class="flex items-center mr-2" method="post" action="./src/models/logoutModel.php">
                      <input class="bg-red-500 hover:bg-red-600 text-gray-900 py-1 px-3 rounded font-semibold hover:cursor-pointer" type="submit" value="Cerrar Sesión" name="cerrar">
                   </form>

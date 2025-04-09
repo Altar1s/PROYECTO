@@ -38,22 +38,32 @@ function EstilosDefault() {
 }
 
 function mostrarPublicaciones(data) {
-   let html = "";
+   $("#contenido").html("");
    data.forEach((x) => {
-      html += `
-      <div class="publicacion shadow bg-orange-100 rounded-lg p-4 mb-4">
-         <h2 class="text-lg text-black font-semibold">${x.titulo}</h2>
-         <p class="text-gray-700">${x.contenido}</p>
-            ${x.img ? `
-            <div class='flex gap-2'>
-               ${x.img.split(",").filter(txt => txt.length != 0).map(img => `
-               <img class='flex-1 overflow-hidden mx-auto w-auto h-auto rounded-lg my-4' src='./media/img/${img}'>
-               `).join('')}
-            </div>
-            ` : ''}
-      </div>`;
+      const publicacion = $("<div>")
+      publicacion.addClass("shadow bg-orange-100 rounded-lg p-4 mb-4")
+      const titulo = $("<h2>")
+      titulo.addClass("text-lg text-black font-semibold")
+      titulo.text(x.titulo)
+      const contenido = $("<p>")
+      contenido.addClass("text-gray-700")
+      contenido.text(x.contenido)
+      publicacion.append(titulo)
+      publicacion.append(contenido)
+      if (x.img) {
+         const divImgs = $("<div>")
+         divImgs.addClass("flex gap-2")
+         x.img.split(",").filter(txt => txt.length != 0).map(txt => {
+            const img = $("<img>")
+            img.addClass("flex-1 overflow-hidden mx-auto w-auto h-auto rounded-lg my-4")
+            img.attr("src", "./media/img/" + txt)
+            divImgs.append(img)
+         }
+         )
+         publicacion.append(divImgs)
+      }
+      $("#contenido").append(publicacion);
    });
-   $("#contenido").html(html);
 }
 
 function EstilosPublicaciones() {
@@ -73,13 +83,24 @@ function EstilosPublicaciones() {
 
 function mostrarGrupos(data) {
    $("#contenido").html("")
-   let html = "";
+   const flex = $("<div>")
+   flex.addClass("flex gap-2 flex-auto")
+   const divChats = $("<div>")
+   divChats.addClass("overflow-y-auto")
+   const divMsgs = $("<div>")
+   divMsgs.attr("id", "chat")
+   divMsgs.addClass("flex-1 p-4 bg-gray-200 rounded-lg overflow-y-auto")
+   flex.append(divChats)
+   flex.append(divMsgs)
    data.forEach((x) => {
-      html += `<div div class="bg-orange-100 rounded-lg p-4  mb-4" >
-         <h2 class="text-lg text-black font-semibold">${x.nombre}</h2>
-   </div> `
+      const chat = $("<div>")
+      const btn = $("<button>")
+      btn.addClass("bg-orange-100 rounded-lg p-4  mb-4 text-lg text-black font-semibold hover:cursor-pointer hover:shadow-lg transition-all ease-in-out")
+      btn.on("click", () => { obtenerChat(x.id) })
+      btn.text(x.nombre)
+      divChats.append(chat.append(btn))
    });
-   $("#contenido").html(html)
+   $("#contenido").append(flex)
 }
 
 function EstilosGrupos() {
@@ -96,5 +117,31 @@ function EstilosGrupos() {
    $("#contenido").removeClass("rounded-tr-lg")
    $("#contenido").addClass("rounded-tl-lg")
 }
+
+
+function obtenerChat(chatId) {
+   $.ajax({
+      url: "./src/models/chatsModel.php",
+      type: "GET",
+      dataType: "json",
+      data: { id: chatId },
+      success: function (data) {
+         mostrarChats(data)
+      },
+      error: function () {
+         console.log("error")
+      }
+   })
+}
+
+function mostrarChats(data) {
+   $("#chat").html("")
+   data.forEach((x) => {
+      const mensaje = $("<div>")
+      mensaje.text(x.contenido)
+      $("#chat").append(mensaje)
+   })
+}
+
 
 obtenerContenido("publicaciones")

@@ -16,9 +16,9 @@
    require_once __DIR__ . "/../includes/config.php";
    require_once __DIR__ . "/../includes/navbar.php";
    ?>
-   <main id="main" class="flex-auto bg-gray-100 p-4">
-      <div class="container mx-auto">
-         <div class="max-w-2xl bg-gray-100 rounded-md mx-auto">
+   <main id="main" class="flex flex-auto bg-gray-100 p-4">
+      <div class="container flex mx-auto flex-auto">
+         <div class="max-w-5xl bg-gray-100 rounded-md mx-auto flex-auto flex flex-col">
             <?php
             if (isset($_SESSION['logged'])) {
                if ($_SESSION['rol'] == 'admin') {
@@ -78,8 +78,8 @@
             <?php
             }
             ?>
-            <div class="bg-gray-200 rounded-b-lg">
-               <div class="py-4 px-3 bg-white rounded-b-lg" id="contenido">
+            <div class="bg-gray-200 rounded-b-lg flex-auto flex">
+               <div class="flex-auto flex flex-col py-4 px-3 bg-white rounded-b-lg" id="contenido">
 
                </div>
             </div>
