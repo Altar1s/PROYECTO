@@ -1,6 +1,6 @@
-<nav class="bg-gray-800 flex p-2 justify-between">
+<nav class="bg-gray-800 flex p-2 justify-between top-0 left-0 sticky">
    <div>
-      <a class="flex items-center gap-2" href="<?php echo URL ?>">
+      <a class=" flex items-center gap-2" href="<?php echo URL ?>">
          <img class="logo" src="<?php echo URL ?>assets/img/logo.png" alt="">
          <span class="text-lg font-semibold text-white">Tegami</span>
       </a>
