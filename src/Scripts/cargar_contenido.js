@@ -36,15 +36,28 @@ function EstilosDefault() {
    $("#contenido").addClass("rounded-t-lg")
 }
 
+function reiniciarScroll(target) {
+   if (target.scrollTop < 20) {
+      target.firstElementChild.style.paddingTop = '1rem';
+   } else {
+      target.firstElementChild.style.paddingTop = '0';
+   }
+}
+
 function mostrarPublicaciones(data) {
+   const aux = $("<div>")
+      .addClass("py-4 space-y-4")
    const publicaciones = $("<div>")
+      .on("scroll", (e) => { reiniciarScroll(e.target) })
+      .addClass("flex-1 overflow-y-auto px-3")
+      .append(aux)
    data.forEach((x) => {
       const titulo = $("<h2>")
          .addClass("text-lg text-black font-semibold").text(x.titulo)
       const contenido = $("<p>")
          .addClass("text-gray-700").text(x.contenido)
       const publicacion = $("<div>")
-         .addClass("shadow bg-orange-100 rounded-lg p-4 mb-4")
+         .addClass("shadow bg-orange-100 rounded-lg p-4")
          .append(titulo)
          .append(contenido)
       if (x.img) {
@@ -52,13 +65,13 @@ function mostrarPublicaciones(data) {
             .addClass("flex gap-2")
          x.img.split(",").filter(txt => txt.length != 0).map(txt => {
             const img = $("<img>")
-               .addClass("flex-1 overflow-hidden mx-auto w-auto h-auto rounded-lg my-4").attr("src", "./media/img/" + txt)
+               .addClass("flex-1 overflow-hidden w-auto h-auto rounded-lg mt-4").attr("src", "./media/img/" + txt)
             divImgs.append(img)
          }
          )
          publicacion.append(divImgs)
       }
-      publicaciones.append(publicacion)
+      aux.append(publicacion)
    });
    $("#contenido").html("")
       .append(publicaciones)
@@ -101,15 +114,9 @@ function cambiarEstilos(vistaActiva) {
    if (vistaActiva === "publicaciones") {
       btnPub.removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
          .addClass("bg-white text-slate-700 shadow");
-      $("main").removeClass("overflow-hidden")
-      $("html").removeClass("h-full")
-      $("body").removeClass("h-full")
    } else if (vistaActiva === "grupos") {
       btnGrp.removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
          .addClass("bg-white text-slate-700 shadow");
-      $("main").addClass("overflow-hidden")
-      $("html").addClass("h-full")
-      $("body").addClass("h-full")
    }
 }
 
@@ -136,7 +143,7 @@ function mostrarChats(data, e) {
       .addClass("bg-gray-100 p-4 rounded-t-lg")
       .append(nameChat)
    const mensajes = $("<div>")
-      .addClass("overflow-y-scroll p-4 pb-0")
+      .addClass("overflow-y-auto p-4 pb-0")
    data.forEach((x) => {
       const content = $("<p>")
          .text(x.contenido)
