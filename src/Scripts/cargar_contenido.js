@@ -1,8 +1,3 @@
-var consultaAnterior = null
-$("#btn_publicaciones").on("click", () => { obtenerContenido("publicaciones") })
-$("#btn_grupos").on("click", () => { obtenerContenido("grupos") })
-
-
 function obtenerContenido(tipoConsulta) {
    if (consultaAnterior == tipoConsulta) {
       return
@@ -88,7 +83,10 @@ function mostrarGrupos(data) {
       const btn = $("<button>")
          .attr("data-chatId", x.id)
          .addClass("bg-orange-100 rounded-lg p-4  mb-4 text-lg text-black font-semibold hover:cursor-pointer hover:shadow-lg transition-all ease-in-out")
-         .on("click", (e) => { obtenerChat(e, x.id) })
+         .on("click", (e) => {
+            crearChat(e)
+            obtenerChat(x.id)
+         })
          .text(x.nombre)
       const chat = $("<div>")
          .append(btn)
@@ -120,7 +118,7 @@ function cambiarEstilos(vistaActiva) {
    }
 }
 
-function obtenerChat(e, chatId) {
+function obtenerChat(chatId) {
    localStorage["lastChatEntered"] = chatId
    $.ajax({
       url: "./src/models/chatsModel.php",
@@ -128,7 +126,7 @@ function obtenerChat(e, chatId) {
       dataType: "json",
       data: { id: chatId },
       success: function (data) {
-         mostrarChats(data, e)
+         mostrarChats(data)
       },
       error: function () {
          console.log("error")
@@ -136,27 +134,79 @@ function obtenerChat(e, chatId) {
    })
 }
 
-function mostrarChats(data, e) {
+function crearChat(e) {
    const nameChat = $("<p>")
       .text($(e.target).text())
    const nameBar = $("<div>")
-      .addClass("bg-gray-100 p-4 rounded-t-lg")
+      .addClass("bg-gray-300 p-4 rounded-t-lg")
       .append(nameChat)
    const mensajes = $("<div>")
+      .attr("id", "msgDiv")
       .addClass("overflow-y-auto p-4 pb-0")
+   $("#chat")
+      .html("")
+      .append(nameBar)
+      .append(mensajes)
+   if ($("#main").data("rol") == "profesor") {
+      agregarInput()
+   }
+}
+
+function mostrarChats(data) {
+   const chatBox = $("#msgDiv")
+   chatBox.html("")
    data.forEach((x) => {
       const content = $("<p>")
          .text(x.contenido)
       const mensaje = $("<div>")
          .addClass("shadow bg-orange-100 rounded-t-lg rounded-br-lg p-4 mb-4")
          .append(content)
-      mensajes.append(mensaje)
+      chatBox.append(mensaje)
    })
-   $("#chat")
-      .html("")
-      .append(nameBar)
-      .append(mensajes)
+   $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight);
 }
 
 
+function agregarInput() {
+   const input = $("<input type='text'>")
+      .addClass("w-full px-4 py-2 bg-white text-gray-900 placeholder:text-gray-500 border border-gray-400 rounded-lg focus:outline-none focus:border-gray-800 focus:ring-1 focus:ring-gray-800 transition duration-150 ease-in-out")
+   const submit = $("<input type='submit'>")
+      .addClass("px-4 py-2 bg-white text-black rounded-lg border border-transparent hover:border-gray-800 cursor-pointer transition duration-150 ease-in-out")
+   const form = $("<form>")
+      .addClass("flex items-center space-x-2 bg-gray-300 p-3 rounded-b-[inherit]")
+      .append(input)
+      .append(submit)
+      .on("submit", (e) => {
+         e.preventDefault();
+         const mensaje = input.val();
+         enviarMensaje(mensaje);
+         input.val("")
+      })
+   $("#chat").append(form)
+
+}
+
+function enviarMensaje(mensaje) {
+   if (!mensaje.length > 0) {
+      return
+   }
+   var id = localStorage["lastChatEntered"]
+   $.ajax({
+      url: "./src/models/sendMessageModel.php",
+      type: "POST",
+      dataType: "json",
+      data: { msg: mensaje, chat_id: id },
+      success: function (rpta) {
+         console.log(rpta)
+         obtenerChat(id)
+      },
+      error: function () {
+         console.log("error")
+      }
+   })
+}
+
+var consultaAnterior = null
+$("#btn_publicaciones").on("click", () => { obtenerContenido("publicaciones") })
+$("#btn_grupos").on("click", () => { obtenerContenido("grupos") })
 obtenerContenido("publicaciones")

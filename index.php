@@ -18,7 +18,7 @@
    require_once __DIR__ . "/src/includes/auth.php";
    require_once __DIR__ . "/src/views/partials/navbar.php";
    ?>
-   <main id="main" class="flex flex-col flex-1 p-4 overflow-hidden container mx-auto lg:max-w-5xl">
+   <main id="main" class="flex flex-col flex-1 p-4 overflow-hidden container mx-auto lg:max-w-5xl" data-rol="<?php echo $_SESSION["rol"] ?? null ?>">
       <?php
       $page = $page = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET["page"] ?? "home"); //PARA EVITAR ATAQUES DE INYECCION DE CODIGO
       switch ($page) {
