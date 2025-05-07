@@ -10,15 +10,9 @@ try {
          session_start();
          $user_id =  $_SESSION['user_id'];
          if ($_SESSION["rol"] == "estudiante") {
-            $query = "SELECT * FROM estudiantes WHERE user_id=$user_id";
-            $resultado = mysqli_fetch_assoc(mysqli_query($conexion, $query));
-            $query = "SELECT * FROM cursos_estudiantes WHERE estudiante_id = {$resultado["id"]} ORDER BY curso_id DESC";
-            $resultado = mysqli_fetch_assoc(mysqli_query($conexion, $query));
-            $query = "SELECT * FROM cursos WHERE id = {$resultado["curso_id"]}";
+            $query = " SELECT cursos.* FROM cursos INNER JOIN cursos_estudiantes ON cursos.id = cursos_estudiantes.curso_id INNER JOIN estudiantes ON cursos_estudiantes.estudiante_id = estudiantes.id WHERE estudiantes.user_id = $user_id ORDER BY cursos.id DESC";
          } else {
-            $query = "SELECT * FROM profesores WHERE user_id=$user_id";
-            $resultado = mysqli_fetch_assoc(mysqli_query($conexion, $query));
-            $query = "SELECT * FROM cursos WHERE profesor_id = {$resultado["id"]} ORDER BY id DESC";
+            $query = "SELECT cursos.* FROM cursos INNER JOIN profesores ON cursos.profesor_id = profesores.id WHERE profesores.user_id = $user_id ORDER BY cursos.id DESC";
          }
       }
       $resultado = mysqli_query($conexion, $query);

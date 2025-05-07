@@ -82,10 +82,11 @@ function mostrarGrupos(data) {
    data.forEach((x) => {
       const btn = $("<button>")
          .attr("data-chatId", x.id)
-         .addClass("bg-orange-100 rounded-lg p-4  mb-4 text-lg text-black font-semibold hover:cursor-pointer hover:shadow-lg transition-all ease-in-out")
+         .addClass("chat-button w-full bg-orange-100 rounded-lg p-4 mb-4 text-lg text-black font-semibold hover:cursor-pointer hover:shadow-lg transition-all ease-in-out active:scale-95")
          .on("click", (e) => {
             crearChat(e)
             obtenerChat(x.id)
+            buttonSelectedStyle(e);
          })
          .text(x.nombre)
       const chat = $("<div>")
@@ -100,21 +101,26 @@ function mostrarGrupos(data) {
    }
 }
 
+function buttonSelectedStyle(e) {
+   $(".chat-button").removeClass("bg-orange-300 shadow-lg scale-95");
+   $(e.target).addClass("bg-orange-300 shadow-lg scale-95");
+}
+
 function cambiarEstilos(vistaActiva) {
    const btnPub = $("#btn_publicaciones");
    const btnGrp = $("#btn_grupos");
 
    [btnPub, btnGrp].forEach(btn => {
-      btn.removeClass("bg-white text-slate-700 shadow")
+      btn.removeClass("bg-white text-slate-700 shadow-xs ")
          .addClass("bg-gray-200 text-slate-500 hover:bg-gray-300");
    });
 
    if (vistaActiva === "publicaciones") {
       btnPub.removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
-         .addClass("bg-white text-slate-700 shadow");
+         .addClass("bg-white text-slate-700 shadow-xs ");
    } else if (vistaActiva === "grupos") {
       btnGrp.removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
-         .addClass("bg-white text-slate-700 shadow");
+         .addClass("bg-white text-slate-700 shadow-xs ");
    }
 }
 
@@ -142,7 +148,7 @@ function crearChat(e) {
       .append(nameChat)
    const mensajes = $("<div>")
       .attr("id", "msgDiv")
-      .addClass("overflow-y-auto p-4 pb-0")
+      .addClass("overflow-y-auto p-4 pb-0 flex-1")
    $("#chat")
       .html("")
       .append(nameBar)
@@ -159,7 +165,7 @@ function mostrarChats(data) {
       const content = $("<p>")
          .text(x.contenido)
       const mensaje = $("<div>")
-         .addClass("shadow bg-orange-100 rounded-t-lg rounded-br-lg p-4 mb-4")
+         .addClass("shadow bg-gray-400 rounded-t-lg rounded-br-lg p-4 mb-4")
          .append(content)
       chatBox.append(mensaje)
    })
