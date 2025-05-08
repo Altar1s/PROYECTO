@@ -1,210 +1,78 @@
-function obtenerContenido(tipoConsulta) {
+function getContent(e) {
+   var tipoConsulta = $(e.target).text().trim()
    if (consultaAnterior == tipoConsulta) {
       return
    }
    consultaAnterior = tipoConsulta
+   fetchHtml(tipoConsulta)
+   cambiarEstilos(e)
+}
+
+function fetchHtml(tipoConsulta) {
    $.ajax({
-      url: "./src/models/homeModel.php",
+      url: "./src/controllers/homeController.php",
       type: "GET",
-      dataType: "json",
+      dataType: "html",
       data: { tipo: tipoConsulta },
-      success: function (data) {
-         if (tipoConsulta == "publicaciones") {
-            mostrarPublicaciones(data)
-            if ($("#btn_publicaciones").length == 0) {
-               EstilosDefault()
-            } else {
-               cambiarEstilos("publicaciones")
-            }
-         } else {
-            mostrarGrupos(data)
-            cambiarEstilos("grupos")
+      success: function (result) {
+         $("#contenido").html(result)
+         if (lastChatEntered) {
+            $(`[data-chat-id='${lastChatEntered}']`).click()
          }
-      },
-      error: function (data) {
-         console.log("error")
-      }
-   })
-}
-
-function EstilosDefault() {
-   $("#contenido").addClass("rounded-t-lg")
-}
-
-function reiniciarScroll(target) {
-   if (target.scrollTop < 20) {
-      target.firstElementChild.style.paddingTop = '1rem';
-   } else {
-      target.firstElementChild.style.paddingTop = '0';
-   }
-}
-
-function mostrarPublicaciones(data) {
-   const aux = $("<div>")
-      .addClass("py-4 space-y-4")
-   const publicaciones = $("<div>")
-      .on("scroll", (e) => { reiniciarScroll(e.target) })
-      .addClass("flex-1 overflow-y-auto px-3")
-      .append(aux)
-   data.forEach((x) => {
-      const titulo = $("<h2>")
-         .addClass("text-lg text-black font-semibold").text(x.titulo)
-      const contenido = $("<p>")
-         .addClass("text-gray-700").text(x.contenido)
-      const publicacion = $("<div>")
-         .addClass("shadow bg-orange-100 rounded-lg p-4")
-         .append(titulo)
-         .append(contenido)
-      if (x.img) {
-         const divImgs = $("<div>")
-            .addClass("flex gap-2")
-         x.img.split(",").filter(txt => txt.length != 0).map(txt => {
-            const img = $("<img>")
-               .addClass("flex-1 overflow-hidden w-auto h-auto rounded-lg mt-4").attr("src", "./media/img/" + txt)
-            divImgs.append(img)
-         }
-         )
-         publicacion.append(divImgs)
-      }
-      aux.append(publicacion)
-   });
-   $("#contenido").html("")
-      .append(publicaciones)
-}
-
-
-function mostrarGrupos(data) {
-   const divChats = $("<div>")
-      .addClass("overflow-y-auto")
-   const divMsgs = $("<div>")
-      .attr("id", "chat")
-      .addClass("flex flex-col flex-1 bg-gray-200 rounded-lg")
-   data.forEach((x) => {
-      const btn = $("<button>")
-         .attr("data-chatId", x.id)
-         .addClass("chat-button w-full bg-orange-100 rounded-lg p-4 mb-4 text-lg text-black font-semibold hover:cursor-pointer hover:shadow-lg transition-all ease-in-out active:scale-95")
-         .on("click", (e) => {
-            crearChat(e)
-            obtenerChat(x.id)
-            buttonSelectedStyle(e);
-         })
-         .text(x.nombre)
-      const chat = $("<div>")
-         .append(btn)
-      divChats.append(chat)
-   })
-   $("#contenido").html("")
-      .append(divChats)
-      .append(divMsgs)
-   if (localStorage["lastChatEntered"]) {
-      $(`[data-chatId="${localStorage["lastChatEntered"]}"]`).click()
-   }
-}
-
-function buttonSelectedStyle(e) {
-   $(".chat-button").removeClass("bg-orange-300 shadow-lg scale-95");
-   $(e.target).addClass("bg-orange-300 shadow-lg scale-95");
-}
-
-function cambiarEstilos(vistaActiva) {
-   const btnPub = $("#btn_publicaciones");
-   const btnGrp = $("#btn_grupos");
-
-   [btnPub, btnGrp].forEach(btn => {
-      btn.removeClass("bg-white text-slate-700 shadow-xs ")
-         .addClass("bg-gray-200 text-slate-500 hover:bg-gray-300");
-   });
-
-   if (vistaActiva === "publicaciones") {
-      btnPub.removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
-         .addClass("bg-white text-slate-700 shadow-xs ");
-   } else if (vistaActiva === "grupos") {
-      btnGrp.removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
-         .addClass("bg-white text-slate-700 shadow-xs ");
-   }
-}
-
-function obtenerChat(chatId) {
-   localStorage["lastChatEntered"] = chatId
-   $.ajax({
-      url: "./src/models/chatsModel.php",
-      type: "GET",
-      dataType: "json",
-      data: { id: chatId },
-      success: function (data) {
-         mostrarChats(data)
       },
       error: function () {
          console.log("error")
       }
    })
-}
-
-function crearChat(e) {
-   const nameChat = $("<p>")
-      .text($(e.target).text())
-   const nameBar = $("<div>")
-      .addClass("bg-gray-300 p-4 rounded-t-lg")
-      .append(nameChat)
-   const mensajes = $("<div>")
-      .attr("id", "msgDiv")
-      .addClass("overflow-y-auto p-4 pb-0 flex-1")
-   $("#chat")
-      .html("")
-      .append(nameBar)
-      .append(mensajes)
-   if ($("#main").data("rol") == "profesor") {
-      agregarInput()
+   if ($(".hometab").length == 0) {
+      $("#contenido").addClass("rounded-t-lg")
    }
 }
 
-function mostrarChats(data) {
-   const chatBox = $("#msgDiv")
-   chatBox.html("")
-   data.forEach((x) => {
-      const content = $("<p>")
-         .text(x.contenido)
-      const mensaje = $("<div>")
-         .addClass("shadow bg-gray-400 rounded-t-lg rounded-br-lg p-4 mb-4")
-         .append(content)
-      chatBox.append(mensaje)
+function fetchChat(e) {
+   $.ajax({
+      url: "./src/controllers/homeController.php",
+      type: "GET",
+      dataType: "html",
+      data: { tipo: "chat", chat_id: $(e.target).data("chat-id") },
+      success: function (result) {
+         $("#chat").html(result)
+         lastChatEntered = $(e.target).data("chat-id")
+      },
+      error: function () {
+         console.log("error")
+      }
    })
-   $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight);
+   if ($(".hometab").length == 0) {
+      $("#contenido").addClass("rounded-t-lg")
+   }
 }
 
+function chatSelectedStyle(e) {
+   $(".chat-button").removeClass("bg-orange-300 shadow-lg scale-95");
+   $(e.target).addClass("chat-selected bg-orange-300 shadow-lg scale-95");
+}
 
-function agregarInput() {
-   const input = $("<input type='text'>")
-      .addClass("w-full px-4 py-2 bg-white text-gray-900 placeholder:text-gray-500 border border-gray-400 rounded-lg focus:outline-none focus:border-gray-800 focus:ring-1 focus:ring-gray-800 transition duration-150 ease-in-out")
-   const submit = $("<input type='submit'>")
-      .addClass("px-4 py-2 bg-white text-black rounded-lg border border-transparent hover:border-gray-800 cursor-pointer transition duration-150 ease-in-out")
-   const form = $("<form>")
-      .addClass("flex items-center space-x-2 bg-gray-300 p-3 rounded-b-[inherit]")
-      .append(input)
-      .append(submit)
-      .on("submit", (e) => {
-         e.preventDefault();
-         const mensaje = input.val();
-         enviarMensaje(mensaje);
-         input.val("")
-      })
-   $("#chat").append(form)
-
+function cambiarEstilos(e) {
+   $(".hometab")
+      .removeClass("bg-white text-slate-700 shadow-xs ")
+      .addClass("bg-gray-200 text-slate-500 hover:bg-gray-300");
+   $(e.target)
+      .removeClass("bg-gray-200 text-slate-500 hover:bg-gray-300")
+      .addClass("bg-white text-slate-700 shadow-xs ")
 }
 
 function enviarMensaje(mensaje) {
    if (!mensaje.length > 0) {
       return
    }
-   var id = localStorage["lastChatEntered"]
    $.ajax({
       url: "./src/models/sendMessageModel.php",
       type: "POST",
       dataType: "json",
       data: { msg: mensaje, chat_id: id },
-      success: function (rpta) {
-         console.log(rpta)
-         obtenerChat(id)
+      success: function () {
+         $(".chat-selected").click()
       },
       error: function () {
          console.log("error")
@@ -213,6 +81,22 @@ function enviarMensaje(mensaje) {
 }
 
 var consultaAnterior = null
-$("#btn_publicaciones").on("click", () => { obtenerContenido("publicaciones") })
-$("#btn_grupos").on("click", () => { obtenerContenido("grupos") })
-obtenerContenido("publicaciones")
+var lastChatEntered = null
+$(".hometab").on("click", (e) => {
+   getContent(e)
+});
+$("#btn_publicaciones").click()
+$("#contenido").on("click", ".chat-button", (e) => {
+   fetchChat(e)
+   chatSelectedStyle(e)
+});
+$("#contenido").on("click", "#btn-send-msg", (e) => {
+   e.preventDefault()
+   enviarMensaje($("#input-msg").val())
+   $("#input-val").val("")
+})
+
+
+
+
+
