@@ -38,6 +38,7 @@ function fetchChat(e) {
       success: function (result) {
          $("#chat").html(result)
          lastChatEntered = $(e.target).data("chat-id")
+         $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight);
       },
       error: function () {
          console.log("error")
@@ -49,7 +50,7 @@ function fetchChat(e) {
 }
 
 function chatSelectedStyle(e) {
-   $(".chat-button").removeClass("bg-orange-300 shadow-lg scale-95");
+   $(".chat-button").removeClass("chat-selected bg-orange-300 shadow-lg scale-95");
    $(e.target).addClass("chat-selected bg-orange-300 shadow-lg scale-95");
 }
 
@@ -62,7 +63,7 @@ function cambiarEstilos(e) {
       .addClass("bg-white text-slate-700 shadow-xs ")
 }
 
-function enviarMensaje(mensaje) {
+function enviarMensaje(mensaje, id) {
    if (!mensaje.length > 0) {
       return
    }
@@ -92,7 +93,7 @@ $("#contenido").on("click", ".chat-button", (e) => {
 });
 $("#contenido").on("click", "#btn-send-msg", (e) => {
    e.preventDefault()
-   enviarMensaje($("#input-msg").val())
+   enviarMensaje($("#input-msg").val(), lastChatEntered)
    $("#input-val").val("")
 })
 
