@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../models/homeModel.php";
 require_once __DIR__ . "/../includes/conexion.php";
+require_once __DIR__ . "/../includes/config.php";
 if (session_status() == PHP_SESSION_NONE) {
    session_start();
 }
@@ -15,6 +16,9 @@ if (isset($_GET["tipo"])) {
          break;
       case "chat":
          returnChat($conexion, $_GET["chat_id"]);
+         break;
+      case "chatMembers":
+         returnChatMembers($conexion, $_GET["chat_id"]);
          break;
    }
 }
@@ -42,6 +46,12 @@ function returnChat(mysqli $conexion, int $chat_id)
    require __DIR__ . "/../views/partials/chat.php";
 }
 
+function returnChatMembers(mysqli $conexion, int $chat_id)
+{
+   $members = getChatMembers($conexion, $chat_id);
+   require __DIR__ . "/../views/partials/chatMembers.php";
+}
+
 /**
  * Carga las vistas correspondientes según el rol del usuario.
  *
@@ -60,7 +70,7 @@ function showHomePage()
          case "profesor":
             include __DIR__ . "/../views/partials/homeTabs.php";
             break;
-         case "alumno":
+         case "estudiante":
             include __DIR__ . "/../views/partials/homeTabs.php";
             break;
       }

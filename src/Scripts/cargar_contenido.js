@@ -16,8 +16,8 @@ function fetchHtml(tipoConsulta) {
       data: { tipo: tipoConsulta },
       success: function (result) {
          $("#contenido").html(result)
-         if (lastChatEntered) {
-            $(`[data-chat-id='${lastChatEntered}']`).click()
+         if (lastChatEntered && tipoConsulta == "Chats") {
+            $("#contenido").html(chatCache)
          }
       },
       error: function () {
@@ -38,7 +38,8 @@ function fetchChat(e) {
       success: function (result) {
          $("#chat").html(result)
          lastChatEntered = $(e.target).data("chat-id")
-         $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight);
+         $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
+         chatCache = $("#contenido").html()
       },
       error: function () {
          console.log("error")
@@ -81,12 +82,44 @@ function enviarMensaje(mensaje, id) {
    })
 }
 
+function getChatMembers(type) {
+   $.ajax({
+      url: "./src/controllers/homeController.php",
+      type: "GET",
+      dataType: "html",
+      data: { tipo: type, chat_id: lastChatEntered },
+      success: function (result) {
+         $("#msgDiv").html(result)
+         chatCache = $("#contenido").html()
+      },
+      error: function () {
+         console.log("error")
+      }
+   })
+   toggleChatButtons()
+}
+
+function toggleChatButtons() {
+   $(".btn-show-members, .btn-show-chat").toggleClass("hidden")
+   if ($(".btn-show-members").hasClass("hidden")) {
+      $(".form-chat-msg").addClass("hidden")
+      return
+   }
+   $(".form-chat-msg").removeClass("hidden")
+}
+
 var consultaAnterior = null
 var lastChatEntered = null
+var chatCache = null
+
 $(".hometab").on("click", (e) => {
    getContent(e)
 });
-$("#btn_publicaciones").click()
+if ($(".hometab").length == 0) {
+   fetchHtml("Publicaciones")
+} else {
+   $("#btn_publicaciones").click()
+}
 $("#contenido").on("click", ".chat-button", (e) => {
    fetchChat(e)
    chatSelectedStyle(e)
@@ -95,6 +128,13 @@ $("#contenido").on("click", "#btn-send-msg", (e) => {
    e.preventDefault()
    enviarMensaje($("#input-msg").val(), lastChatEntered)
    $("#input-val").val("")
+})
+$("#contenido").on("click", ".btn-show-members", () => {
+   getChatMembers("chatMembers")
+})
+$("#contenido").on("click", ".btn-show-chat", () => {
+   $(`[data-chat-id='${lastChatEntered}']`).click()
+   toggleChatButtons()
 })
 
 

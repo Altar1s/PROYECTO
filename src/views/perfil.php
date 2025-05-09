@@ -18,8 +18,8 @@
       </form>
    </div>
    <?php
-   if ($_SESSION["rol"] == "estudiantes") {
-      require __DIR__ . "./partials/profileTable.php";
+   if ($_SESSION["rol"] == "estudiante") {
+      require __DIR__ . "/partials/profileTable.php";
    }
    ?>
 </div>
