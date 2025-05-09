@@ -20,6 +20,14 @@ if (isset($_GET["tipo"])) {
       case "chatMembers":
          returnChatMembers($conexion, $_GET["chat_id"]);
          break;
+      case "notas":
+         returnStudentGrades($conexion, $_GET["chat_id"], $_GET["student_id"]);
+         break;
+      case "actualizar_notas":
+         updateGrades($conexion, $_GET["student_id"], $_GET["chat_id"], $_GET["nota1"], $_GET["nota2"], $_GET["nota3"]);
+         returnStudentGrades($conexion, $_GET["chat_id"], $_GET["student_id"]);
+         require __DIR__ . "/../views/partials/gradesUpdated.php";
+         break;
    }
 }
 
@@ -51,6 +59,14 @@ function returnChatMembers(mysqli $conexion, int $chat_id)
    $members = getChatMembers($conexion, $chat_id);
    require __DIR__ . "/../views/partials/chatMembers.php";
 }
+
+function returnStudentGrades(mysqli $conexion, int $chat_id, int $student_id)
+{
+   $grades = getStudentGrades($conexion, $chat_id, $student_id);
+
+   require __DIR__ . "/../views/partials/editGrade.php";
+}
+
 
 /**
  * Carga las vistas correspondientes según el rol del usuario.

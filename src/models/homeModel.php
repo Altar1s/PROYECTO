@@ -64,3 +64,25 @@ function getChatMembers(mysqli $conexion, int $chat_id)
    ORDER BY estudiantes.apellidos, estudiantes.nombre;";
    return returnData($conexion, $query);
 }
+
+function getStudentGrades(mysqli $conexion, int $chat_id, int $student_id)
+{
+   $query = "SELECT nota
+   FROM notas 
+   WHERE estudiante_id = $student_id AND curso_id = $chat_id 
+   ORDER BY evaluacion_id;";
+   return returnData($conexion, $query);
+}
+
+function updateGrades(mysqli $conexion, int $student_id, int $chat_id, float $nota1, float $nota2, float $nota3)
+{
+   $grades = [$nota1, $nota2, $nota3];
+   foreach (range(0, 2) as $loop) {
+      $evaluation = $loop + 1;
+      $grade = $grades[$loop];
+      $query = "INSERT INTO notas (estudiante_id, curso_id, evaluacion_id, nota)
+      VALUES ($student_id, $chat_id,$evaluation,$grade)
+      ON DUPLICATE KEY UPDATE nota = VALUES(nota);";
+      mysqli_query($conexion, $query);
+   }
+}

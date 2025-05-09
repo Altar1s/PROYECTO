@@ -1,5 +1,5 @@
-      <div class="bg-gray-300 p-4 rounded-t-lg flex items-center">
-         <p class="flex-1 font-semibold text-gray-800"><?php echo $chat[0]["nombre"] ?></p>
+      <div class="bg-gray-800 p-4 rounded-t-lg flex items-center">
+         <p class="flex-1 font-semibold text-white"><?php echo $chat[0]["nombre"] ?></p>
          <?php if ($_SESSION["rol"] == "profesor"): ?>
             <button class="btn-show-members bg-white text-gray-800 font-medium py-1.5 px-4 rounded-lg shadow-xs hover:bg-gray-100 hover:shadow-md hover:cursor-pointer transition-all duration-200">
                Ver miembros

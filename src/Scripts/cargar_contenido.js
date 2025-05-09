@@ -108,6 +108,47 @@ function toggleChatButtons() {
    $(".form-chat-msg").removeClass("hidden")
 }
 
+function getStudentGrades(e) {
+   $.ajax({
+      url: "./src/controllers/homeController.php",
+      type: "GET",
+      dataType: "html",
+      data: { tipo: "notas", chat_id: lastChatEntered, student_id: $(e.target).data("student-id") },
+      success: function (result) {
+         $("#msgDiv").html(result)
+         toggleChatButtons()
+      },
+      error: function () {
+         console.log("error")
+      }
+   })
+}
+
+function updateStudentGrades(e) {
+   $.ajax({
+      url: "./src/controllers/homeController.php",
+      type: "GET",
+      dataType: "html",
+      data: {
+         tipo: "actualizar_notas",
+         chat_id: lastChatEntered,
+         student_id: $("[name='student_id']").val(),
+         nota1: $("[name='nota1']").val(),
+         nota2: $("[name='nota2']").val(),
+         nota3: $("[name='nota3']").val()
+      },
+      success: function (result) {
+         $("#msgDiv").html(result)
+         setTimeout(() => {
+            $("#alert").addClass("opacity-0")
+         }, 1500);
+      },
+      error: function () {
+         console.log("error")
+      }
+   })
+}
+
 var consultaAnterior = null
 var lastChatEntered = null
 var chatCache = null
@@ -135,6 +176,13 @@ $("#contenido").on("click", ".btn-show-members", () => {
 $("#contenido").on("click", ".btn-show-chat", () => {
    $(`[data-chat-id='${lastChatEntered}']`).click()
    toggleChatButtons()
+})
+$("#contenido").on("click", ".btn-student-grades", (e) => {
+   getStudentGrades(e)
+})
+$("#contenido").on("click", ".btn-edit-grades", (e) => {
+   e.preventDefault()
+   updateStudentGrades(e)
 })
 
 
