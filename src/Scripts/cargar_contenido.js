@@ -97,10 +97,14 @@ function getChatMembers(type) {
       }
    })
    toggleChatButtons()
+   toggleInput()
 }
 
 function toggleChatButtons() {
    $(".btn-show-members, .btn-show-chat").toggleClass("hidden")
+}
+
+function toggleInput() {
    if ($(".btn-show-members").hasClass("hidden")) {
       $(".form-chat-msg").addClass("hidden")
       return
