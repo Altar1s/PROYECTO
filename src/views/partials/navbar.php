@@ -18,7 +18,7 @@
          </form>
       <?php else: ?>
          <div class="flex items-center mr-2 text-white hover:text-yellow-500 transition-all ease-in-out">
-            <a href="<?php echo URL ?>index.php?page=perfil">
+            <a id="profile-btn" href="<?php echo URL ?>index.php?page=perfil">
                <i class="fa-solid fa-user text-2xl"></i>
             </a>
          </div>

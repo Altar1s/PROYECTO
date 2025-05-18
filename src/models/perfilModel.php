@@ -1,5 +1,48 @@
 <?php
 
+function returnData($conexion, $query)
+{
+   $resultado = mysqli_query($conexion, $query);
+   $datos = [];
+   while ($fila = mysqli_fetch_assoc($resultado)) {
+      $datos[] = $fila;
+   }
+   return $datos;
+}
+
+function getProfessorsNames(mysqli $conexion, string $bbdd)
+{
+   if (!mysqli_select_db($conexion, $bbdd)) {
+      return [];
+   }
+   $query = "SELECT *
+   FROM profesores
+   ORDER BY nombre";
+   return returnData($conexion, $query);
+}
+
+function getStudentsNames(mysqli $conexion, string $bbdd)
+{
+   if (!mysqli_select_db($conexion, $bbdd)) {
+      return [];
+   }
+   $query = "SELECT *
+   FROM estudiantes
+   ORDER BY nombre";
+   return returnData($conexion, $query);
+}
+
+function getGroupsNames(mysqli $conexion, string $bbdd)
+{
+   if (!mysqli_select_db($conexion, $bbdd)) {
+      return [];
+   }
+   $query = "SELECT *
+   FROM cursos
+   ORDER BY nombre";
+   return returnData($conexion, $query);
+}
+
 function getUserData(mysqli $conexion, string $bbdd, int $user_id)
 {
    if (mysqli_select_db($conexion, $bbdd)) {
@@ -46,4 +89,9 @@ function getStudentGrades(mysqli $conexion, string $bbdd, int $user_id)
       }
       return $notas;
    }
+}
+
+function deleteEntity(mysqli $conexion, string $bbdd, string $query)
+{
+   mysqli_query($conexion, $query);
 }

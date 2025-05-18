@@ -10,7 +10,6 @@
          <button data-student-id="<?php echo $member['id'] ?>" class="btn-student-grades ml-auto bg-gray-800 text-white text-sm font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 hover:cursor-pointer transition-colors duration-200">
             Cambiar nota
          </button>
-
       </div>
    <?php endforeach ?>
 </div>

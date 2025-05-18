@@ -160,11 +160,21 @@ var chatCache = null
 $(".hometab").on("click", (e) => {
    getContent(e)
 });
+
 if ($(".hometab").length == 0) {
    fetchHtml("Publicaciones")
 } else {
    $("#btn_publicaciones").click()
 }
+
+$("#main").on("click", "#btn_chats", (e) => {
+   $("#main").addClass("overflow-hidden")
+})
+
+$("#main").on("click", "#btn_publicaciones", (e) => {
+   $("#main").removeClass("overflow-hidden")
+})
+
 $("#contenido").on("click", ".chat-button", (e) => {
    fetchChat(e)
    chatSelectedStyle(e)

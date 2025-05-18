@@ -1,2 +1,2 @@
 <script type="module" src="./src/scripts/cargar_contenido.js"></script>
-<div id="contenido" class="flex flex-1 gap-2 min-h-0 py-4 px-3 bg-white rounded-b-lg rounded-tl-lg shadow-xs "></div>
+<div id="contenido" class=" overflow-hidden flex flex-1 gap-2 min-h-0 py-4 px-3 bg-white rounded-b-lg rounded-tl-lg shadow-xs "></div>
