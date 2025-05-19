@@ -3,12 +3,11 @@
       <table class="min-w-full">
          <thead class="bg-gray-800 text-white sticky top-0">
             <tr>
-               <th class="px-4 py-2 flex justify-between">
-                  Nombre
-                  <button class="bg-emerald-200 hover:bg-emerald-300 text-emerald-900 px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer shadow-sm">
+               <th class="px-4 py-2 flex justify-between items-center">
+                  <span class="flex align-middle">Nombre</span>
+                  <button id="add-btn" data-entity="<?php echo $_GET["type"] ?>" class="bg-emerald-200 hover:bg-emerald-300 text-emerald-900 px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer shadow-sm">
                      Agregar
                   </button>
-
                </th>
             </tr>
          </thead>
