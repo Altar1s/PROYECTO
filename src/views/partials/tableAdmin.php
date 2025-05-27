@@ -5,7 +5,7 @@
             <tr>
                <th class="px-4 py-2 flex justify-between items-center">
                   <span class="flex align-middle">Nombre</span>
-                  <button id="add-btn" data-entity="<?php echo $_GET["type"] ?>" class="bg-emerald-200 hover:bg-emerald-300 text-emerald-900 px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer shadow-sm">
+                  <button id="add-btn" data-modaltype="add-entity" data-entity="<?= $entity ?? "profesor" ?>" class="btn-show-modal bg-emerald-200 hover:bg-emerald-300 text-emerald-900 px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer shadow-sm">
                      Agregar
                   </button>
                </th>
@@ -18,10 +18,10 @@
                      <div class="flex items-center justify-between">
                         <span><?php echo $data["nombre"] . " " . ($data["apellidos"] ?? "") ?></span>
                         <div class="flex gap-2">
-                           <button data-entity-id="<?php echo $data["id"] ?>" data-entity="<?php echo $_GET["type"] ?>" data-action="eliminar" class="btn-delete bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer">
+                           <button data-modaltype="delete-entity" data-entity-id="<?php echo $data["id"] ?>" data-entity="<?= $entity ?? "profesor" ?>" class="btn-show-modal bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer">
                               Eliminar
                            </button>
-                           <button class="bg-gray-800 hover:bg-zinc-600 text-white px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer">
+                           <button data-modaltype="edit-entity" data-entity-id="<?php echo $data["id"] ?>" data-entity="<?= $entity ?? "profesor" ?>" class="btn-show-modal bg-gray-800 hover:bg-zinc-600 text-white px-3 py-1 rounded transition-colors duration-300 ease-in-out hover:cursor-pointer">
                               Editar
                            </button>
                         </div>
@@ -29,7 +29,6 @@
                   </td>
                </tr>
             <?php endforeach ?>
-
          </tbody>
       </table>
    </div>

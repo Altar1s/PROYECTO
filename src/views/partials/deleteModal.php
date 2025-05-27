@@ -3,7 +3,7 @@
       <h2 class="text-xl font-semibold text-gray-800 mb-3">¿Estás seguro?</h2>
       <p class="text-gray-600 mb-5 text-sm">Esta acción eliminará el registro de forma permanente. Esta acción no se puede deshacer.</p>
       <div class="flex justify-center gap-4">
-         <button id="confirm-delete" class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-300 shadow-sm hover:cursor-pointer">
+         <button data-id="<?= $id ?>" data-entity="<?= $entity ?>" id="confirm-delete" class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-300 shadow-sm hover:cursor-pointer">
             Eliminar
          </button>
          <button id="cancel-action" class="bg-gray-100 text-gray-700 px-5 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-300 shadow-sm hover:cursor-pointer">

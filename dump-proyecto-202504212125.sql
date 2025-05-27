@@ -293,7 +293,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin@gmail.com',_binary 'kÇ¨fWJ\æ\ãs¶s3\Í\Ó','admin','no_photo.png'),(2,'profesor1@gmail.com',_binary 'kÇ¨fWJ\æ\ãs¶s3\Í\Ó','profesor','no_photo.png'),(3,'alumno1@gmail.com',_binary 'kÇ¨fWJ\æ\ãs¶s3\Í\Ó','estudiante','no_photo.png');
+INSERT INTO `users` VALUES (1,'admin@gmail.com',_binary 'kÇ¨fWJ\ï¿½\ï¿½sï¿½s3\ï¿½\ï¿½','admin','no_photo.png'),(2,'profesor1@gmail.com',_binary 'kÇ¨fWJ\ï¿½\ï¿½sï¿½s3\ï¿½\ï¿½','profesor','no_photo.png'),(3,'alumno1@gmail.com',_binary 'kÇ¨fWJ\ï¿½\ï¿½sï¿½s3\ï¿½\ï¿½','estudiante','no_photo.png');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

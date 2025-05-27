@@ -1,4 +1,8 @@
-<form>
+<form id="edit-grades" class="shadow">
+   <input
+      type="hidden"
+      name="type"
+      value="editGrades">
    <table class="min-w-full border-collapse rounded-lg shadow-xs overflow-hidden ring-1 ring-gray-300">
       <thead class="bg-gray-800 text-white">
          <tr>
@@ -31,6 +35,6 @@
          </tr>
       </tbody>
    </table>
-   <input type="hidden" name="student_id" value="<?php echo $student_id ?>">
-   <input type="hidden" name="chat_id" value="<?php echo $chat_id ?>">
+   <input type="hidden" name="student-id" value="<?php echo $studentId ?>">
+   <input type="hidden" name="chat-id" value="<?php echo $chatId ?>">
 </form>

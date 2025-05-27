@@ -1,4 +1,4 @@
-<div class="flex-1 flex flex-col">
+<div class="flex-1 flex flex-col mt-4">
    <div class="overflow-y-auto max-h-70 border border-gray-300 rounded shadow-md">
       <table class="min-w-full">
          <thead class="bg-gray-800 text-white sticky top-0">
