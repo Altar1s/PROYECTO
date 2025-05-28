@@ -40,7 +40,7 @@ export function actionTab(data) {
 }
 
 export function actionChat(data) {
-   const url = "./src/controllers/chatController.php"
+   const url = "./src/controllers/cursoController.php"
    const method = "GET"
    const dataType = "html"
 
