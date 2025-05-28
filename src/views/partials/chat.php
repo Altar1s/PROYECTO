@@ -14,7 +14,8 @@
    <span class="text-3xl text-gray-800">.</span>
    <?php if ($_SESSION["rol"] == "profesor"): ?>
       <button id="btn-members" data-type="members" data-chat-id="<?= $chatId ?>" class="btn-show-members bg-white text-gray-800 font-medium py-1.5 px-4 rounded-lg shadow-xs hover:bg-gray-100 hover:shadow-md hover:cursor-pointer transition-all duration-200">
-         Ver miembros
+         <span class="hidden sm:block">Ver miembros</span>
+         <span class="inline sm:hidden">miembros</span>
       </button>
    <?php endif ?>
 </div>
