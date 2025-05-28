@@ -7,6 +7,7 @@
    <link href="./assets/CSS/output.css" rel="stylesheet" />
    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <link rel="icon" href="./assets/img/logo.png">
    <script type="module" src="./src/scripts/main.js"></script>
    <!-- CSS y JS de Select2 -->
    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -14,7 +15,7 @@
    <title><?php echo htmlspecialchars($_GET["page"] ?? "home"); ?></title>
 </head>
 
-<body class="flex flex-col min-h-screen h-full bg-gray-100 text-gray-800">
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
 
    <?php
    if (session_status() === PHP_SESSION_NONE) {

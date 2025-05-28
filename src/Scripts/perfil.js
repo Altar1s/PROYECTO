@@ -1,12 +1,25 @@
 import { actionModal, actionFormData, actionAdminBtns, actionDelete } from "./api.js"
 
 export function iniciarPerfil() {
+   const menuToggle = $("#menu-toggle")
+   const menuClose = $("#menu-close")
+   const mobileMenu = $("#mobile-menu")
    const adminBtns = $(".admin-btn")
    const profileContainer = $("#profile-container")
    const aboveDisplay = $("#above-display-info")
    const modalContainer = $("#modal-container")
    const requestBox = $("#request-display-info")
-   let lastPressedButton = null
+
+   //menu desplegable
+   menuToggle.on("click", () => {
+      mobileMenu.removeClass('translate-x-full');
+      mobileMenu.addClass('translate-x-0');
+   })
+
+   menuClose.on('click', () => {
+      mobileMenu.removeClass('translate-x-0');
+      mobileMenu.addClass('translate-x-full');
+   });
 
    //abrir la modal de agregar nueva entidad
    profileContainer.on("click", ".btn-show-modal", (e) => {

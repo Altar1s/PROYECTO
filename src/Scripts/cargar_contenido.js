@@ -1,11 +1,24 @@
 import { actionModal, actionTab, actionFormData, actionChat, actionPublication } from "./api.js"
 
 export function iniciarHome() {
+   const menuToggle = $("#menu-toggle")
+   const menuClose = $("#menu-close")
+   const mobileMenu = $("#mobile-menu")
    const modalContainer = $("#modal-container")
    const container = $("#contenido")
    const main = $("#main")
    let currentTab = "publications"
-   let chatCache = null
+
+   //menu desplegable
+   menuToggle.on("click", () => {
+      mobileMenu.removeClass('translate-x-full');
+      mobileMenu.addClass('translate-x-0');
+   })
+
+   menuClose.on('click', () => {
+      mobileMenu.removeClass('translate-x-0');
+      mobileMenu.addClass('translate-x-full');
+   });
 
    //renderiza las vistas de los botones de la barra de navegacion
    $(".tab").on("click", (e) => {
@@ -62,8 +75,8 @@ export function iniciarHome() {
    $("#main").on("submit", "#send-message", (e) => {
       handleFormSubmit(e, (response) => {
          const msgContainer = $("#msgDiv")
-
          msgContainer.html(response)
+         msgContainer.scrollTop(msgContainer[0].scrollHeight);
       })
    })
 
@@ -267,8 +280,10 @@ export function iniciarHome() {
    function toggleOverflow() {
       if (!$("#main").hasClass("overflow-hidden") && $("main").find("#chat").length > 0) {
          $("#main").addClass("overflow-hidden")
+         $("body").addClass("h-full")
       } else {
          $("#main").removeClass("overflow-hidden")
+         $("body").removeClass("h-full")
       }
    }
 
