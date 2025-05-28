@@ -26,23 +26,101 @@ function getUsuarioByEmail(mysqli $conexion, string $bbdd, string $email)
 function addUsuario(mysqli $conexion, string $bbdd, array $data)
 {
    if (!selectDB($conexion, $bbdd)) return false;
-   if (isEmailRepeted($conexion, $bbdd, $data)) {
+
+   if (isEmailRepeated($conexion, $bbdd, $data)) {
       return false;
    }
+
+   if (isset($_FILES["foto"])) {
+      $data["foto"] = $_FILES["foto"];
+   }
+
    $email = mysqli_real_escape_string($conexion, $data["email"]);
    $password = mysqli_real_escape_string($conexion, $data["password"]);
    $rol = mysqli_real_escape_string($conexion, $data["entity"]);
-   $query = "INSERT INTO users (email, password, rol) VALUES ('$email', AES_ENCRYPT('$password','claveultrasecreta'), '$rol');";
+
+   // Gestión de la foto
+   $foto = "no_photo.png";
+   if (isset($data["foto"]) && isset($data["foto"]["name"])) {
+      $path = __DIR__ . "/../../media/img/";
+      $originalName = basename($data["foto"]["name"]);
+      $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+      $uniqueName = uniqid() . "_" . md5(time() . rand()) . "." . $extension;
+      if (move_uploaded_file($data["foto"]["tmp_name"], $path . $uniqueName)) {
+         $foto = $uniqueName;
+      }
+   }
+   $query = "INSERT INTO users (email, password, rol, foto) 
+   VALUES ('$email', AES_ENCRYPT('$password', 'claveultrasecreta'), '$rol', '$foto');";
    mysqli_query($conexion, $query);
-   $user_id =  mysqli_insert_id($conexion);
+   return mysqli_insert_id($conexion);
+}
+
+function editUsuario(mysqli $conexion, string $bbdd, array $data)
+{
+   if (!selectDB($conexion, $bbdd)) return false;
+   $email = mysqli_real_escape_string($conexion, $data["email"]);
+   $user_id = intval($data["user_id"]);
+
+   if (isEmailRepeated($conexion, $bbdd, $data)) {
+      return false;
+   }
+
+   if (isset($_FILES["foto"])) {
+      $data["foto"] = $_FILES["foto"];
+   }
+
+   $foto_sql = "";
+   if (isset($data["foto"]) && isset($data["foto"]["name"])) {
+      $query = "SELECT foto FROM users WHERE id = $user_id";
+      $result = mysqli_query($conexion, $query);
+      $row = mysqli_fetch_assoc($result);
+      $fotoAnterior = $row['foto'] ?? null;
+      mysqli_free_result($result);
+
+      if ($fotoAnterior && $fotoAnterior != "no_photo.png") {
+         $filePath = __DIR__ . "/../../media/img/" . $fotoAnterior;
+         if (file_exists($filePath)) {
+            unlink($filePath);
+         }
+      }
+      $path = __DIR__ . "/../../media/img/";
+      $originalName = basename($data["foto"]["name"]);
+      $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+      $uniqueName = uniqid() . "_" . md5(time() . rand()) . "." . $extension;
+
+      if (move_uploaded_file($data["foto"]["tmp_name"], $path . $uniqueName)) {
+         $foto_sql = "$uniqueName";
+      }
+   }
+
+   if (isEmailTheSame($conexion, $bbdd, $data) && $foto_sql) {
+      $query = "UPDATE users SET foto = '$foto_sql' WHERE id = $user_id";
+   } else  if (!isEmailTheSame($conexion, $bbdd, $data) && $foto_sql) {
+      $query = "UPDATE users SET email = '$email', foto = '$foto_sql' WHERE id = $user_id";
+   } else if (!isEmailTheSame($conexion, $bbdd, $data) && !$foto_sql) {
+      $query = "UPDATE users SET email = '$email' WHERE id = $user_id";
+   } else {
+      return $user_id;
+   }
+   mysqli_query($conexion, $query);
    return $user_id;
 }
 
-function isEmailRepeted(mysqli $conexion, string $bbdd, array $data)
+
+
+function isEmailRepeated(mysqli $conexion, string $bbdd, array $data)
 {
    if (!selectDB($conexion, $bbdd)) return false;
+
    $email = $data["email"];
-   $query = "SELECT * FROM users WHERE email = '$email'";
+
+   if (isset($data["user_id"])) {
+      $user_id = $data["user_id"];
+      $query = "SELECT * FROM users WHERE email = '$email' AND id != $user_id";
+   } else {
+      $query = "SELECT * FROM users WHERE email = '$email'";
+   }
    $response = mysqli_query($conexion, $query);
    if (mysqli_num_rows($response) > 0) {
       return true;
@@ -64,27 +142,20 @@ function isEmailTheSame(mysqli $conexion, string $bbdd, array $data)
    }
 }
 
-// Eliminar usuario
-function deleteUsuario(mysqli $conexion, string $bbdd, int $id)
+function updateUserPassword(mysqli $conexion, string $bbdd, array $data, int $user_id)
 {
    if (!selectDB($conexion, $bbdd)) return false;
-   $query = "DELETE FROM users WHERE id = $id";
-   return fetchOne($conexion, $bbdd, $query);
-}
 
-function editUsuario(mysqli $conexion, string $bbdd, array $data)
-{
-   if (!selectDB($conexion, $bbdd)) return false;
-   $email = mysqli_real_escape_string($conexion, $data["email"]);
-   $user_id = $data["user_id"];
+   $currentPass = mysqli_real_escape_string($conexion, $data["currentPass"]);
+   $newPass = mysqli_real_escape_string($conexion, $data["newPass"]);
 
-   if (isEmailTheSame($conexion, $bbdd, $data)) {
-      return $user_id;
+   $query = "SELECT id FROM users WHERE id = $user_id AND password = AES_ENCRYPT('$currentPass', 'claveultrasecreta');";
+   $result = mysqli_query($conexion, $query);
+
+   if (mysqli_num_rows($result) == 1) {
+      $query = "UPDATE users SET password = AES_ENCRYPT('$newPass', 'claveultrasecreta') WHERE id = $user_id;";
+      mysqli_query($conexion, $query);
+      return true;
    }
-   if (isEmailRepeted($conexion, $bbdd, $data)) {
-      return false;
-   }
-   $query = "UPDATE users SET email = '$email' WHERE id = $user_id";
-   mysqli_query($conexion, $bbdd);
-   return $user_id;
+   return false;
 }

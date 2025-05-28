@@ -11,14 +11,14 @@ export function iniciarHome() {
 
    //menu desplegable
    menuToggle.on("click", () => {
-      mobileMenu.removeClass('translate-x-full');
-      mobileMenu.addClass('translate-x-0');
+      mobileMenu.removeClass('translate-x-full')
+      mobileMenu.addClass('translate-x-0')
    })
 
    menuClose.on('click', () => {
-      mobileMenu.removeClass('translate-x-0');
-      mobileMenu.addClass('translate-x-full');
-   });
+      mobileMenu.removeClass('translate-x-0')
+      mobileMenu.addClass('translate-x-full')
+   })
 
    //renderiza las vistas de los botones de la barra de navegacion
    $(".tab").on("click", (e) => {
@@ -54,7 +54,7 @@ export function iniciarHome() {
             $("#busqueda").select2({
                placeholder: "Elige una opción...",
                allowClear: true
-            });
+            })
          })
          .fail(() => console.log("error"))
    })
@@ -76,7 +76,7 @@ export function iniciarHome() {
       handleFormSubmit(e, (response) => {
          const msgContainer = $("#msgDiv")
          msgContainer.html(response)
-         msgContainer.scrollTop(msgContainer[0].scrollHeight);
+         msgContainer.scrollTop(msgContainer[0].scrollHeight)
       })
    })
 
@@ -94,7 +94,7 @@ export function iniciarHome() {
             $("#chat-btns").addClass("hidden")
             $("#chat").removeClass("hidden")
             $("#chat").addClass("flex")
-            $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight);
+            $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
          })
 
          .fail(() => console.log("error"))
@@ -129,7 +129,7 @@ export function iniciarHome() {
 
       actionChat(data).done((result) => {
          chatContainer.html(result)
-         $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight);
+         $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
       })
    })
 
@@ -154,29 +154,40 @@ export function iniciarHome() {
          membersContainer.html(response)
          $(e.target).closest(".modal").remove()
          setTimeout(() => {
-            $("#alert").addClass("opacity-0");
+            $("#alert").addClass("opacity-0")
             setTimeout(() => {
-               $("#alert").remove();
-            }, 300);
-         }, 1500);
+               $("#alert").remove()
+            }, 300)
+         }, 1500)
       })
    })
 
    //funcion generica para manejar el submit de los formularios
    function handleFormSubmit(e, onSuccess) {
-      e.preventDefault(e)
-      const form = $(e.target)
-      const data = new FormData(form[0])
+      e.preventDefault()
+      const form = $(e.target)[0]
+      const data = new FormData(form)
+
+      // Verificar el tamaño de las imágenes 
+      const files = data.getAll("imagenes[]")
+
+      for (const file of files) {
+         if (file.size > 10 * 1024 * 1024) { // 10 MB
+            actionModal({ modaltype: "error-imagen" })
+               .done((result) => {
+                  modalContainer.html(result)
+               })
+            return
+         }
+      }
 
       actionFormData(data)
          .done((result) => {
             onSuccess(result)
-            form[0].reset()
+            form.reset()
          })
-
          .fail(() => console.log("error"))
    }
-
 
    //cambiar notas de un estudiante
    container.on("submit", "#edit-grades", (e) => {
@@ -185,8 +196,8 @@ export function iniciarHome() {
          responseContainer.html(response)
          // efecto de alerta
          setTimeout(() => {
-            $("#alert").addClass("opacity-0");
-         }, 1500);
+            $("#alert").addClass("opacity-0")
+         }, 1500)
       })
    })
 
@@ -246,35 +257,35 @@ export function iniciarHome() {
    }
 
    function toggleChatButtons() {
-      const btnBackMembers = $("#btn-back-members");
-      const btnBackChat = $("#btn-back-chat");
-      const btnMembers = $("#btn-members");
-      const btnBackBtns = $("#btn-back-btns");
-      const chatBtns = $("#chat-btns");
-      const sendMessage = $("#send-message");
+      const btnBackMembers = $("#btn-back-members")
+      const btnBackChat = $("#btn-back-chat")
+      const btnMembers = $("#btn-members")
+      const btnBackBtns = $("#btn-back-btns")
+      const chatBtns = $("#chat-btns")
+      const sendMessage = $("#send-message")
 
       if (btnBackMembers.hasClass("hidden") && btnMembers.hasClass("hidden")) {
-         btnBackMembers.toggleClass("hidden"); // activa la opcion de volver a los miembros
-         btnBackChat.toggleClass("hidden"); //desactiva la opcion de volver al chat
-         return;
+         btnBackMembers.toggleClass("hidden") // activa la opcion de volver a los miembros
+         btnBackChat.toggleClass("hidden") //desactiva la opcion de volver al chat
+         return
       }
 
       if (btnBackChat.hasClass("hidden") && btnMembers.hasClass("hidden")) {
-         btnBackMembers.toggleClass("hidden"); //desactiva la opcion de volver a los miembros
-         btnBackChat.toggleClass("hidden"); //activa la opcion de volver al chat
-         return;
+         btnBackMembers.toggleClass("hidden") //desactiva la opcion de volver a los miembros
+         btnBackChat.toggleClass("hidden") //activa la opcion de volver al chat
+         return
       }
 
       if (btnBackChat.hasClass("hidden") && btnMembers.hasClass("hidden") && chatBtns.hasClass("hidden")) {
-         btnBackBtns.toggleClass("hidden"); //activa la opcion de volver a los chats
-         return;
+         btnBackBtns.toggleClass("hidden") //activa la opcion de volver a los chats
+         return
       }
 
 
-      btnBackBtns.toggleClass("hidden"); // desactiva la opcion de volver a los chats
-      btnBackChat.toggleClass("hidden"); //activa la opcion de volver al chat
-      btnMembers.toggleClass("hidden"); //desactiva la opcion de ver los miembros
-      sendMessage.toggleClass("hidden"); //desactiva el formulario de enviar mensaje
+      btnBackBtns.toggleClass("hidden") // desactiva la opcion de volver a los chats
+      btnBackChat.toggleClass("hidden") //activa la opcion de volver al chat
+      btnMembers.toggleClass("hidden") //desactiva la opcion de ver los miembros
+      sendMessage.toggleClass("hidden") //desactiva el formulario de enviar mensaje
    }
 
    function toggleOverflow() {

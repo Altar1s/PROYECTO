@@ -30,6 +30,17 @@ function addAdmin(mysqli $conexion, string $bbdd, array $data, int $user_id)
 function deleteAdmin(mysqli $conexion, string $bbdd, int $id)
 {
    if (!selectDB($conexion, $bbdd)) return false;
+   $query = "SELECT foto FROM users WHERE id = (SELECT user_id FROM estudiantes WHERE id = $id)";
+   $result = mysqli_query($conexion, $query);
+   $row = mysqli_fetch_assoc($result);
+   $foto = $row['foto'] ?? null;
+
+   if ($foto) {
+      $filePath = __DIR__ . "/../../media/img/" . $foto;
+      if (file_exists($filePath)) {
+         unlink($filePath);
+      }
+   }
    $query = "DELETE FROM users WHERE id = (SELECT user_id FROM admins WHERE id = $id)";
    mysqli_query($conexion, $query);
 }

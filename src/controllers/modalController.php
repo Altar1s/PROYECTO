@@ -70,4 +70,12 @@ switch ($modaltype) {
 
       require __DIR__ . "/../views/partials/modals/addModal.php";
       break;
+
+   case "error-imagen":
+      require __DIR__ . "/../views/partials/modals/imageError.php";
+      break;
+
+   case "change-password":
+      require __DIR__ . "/../views/partials/modals/changePassword.php";
+      break;
 }

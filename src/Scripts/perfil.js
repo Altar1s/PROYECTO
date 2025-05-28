@@ -42,7 +42,7 @@ export function iniciarPerfil() {
       $(e.target).closest(".modal").remove()
    })
 
-   //enviar datos para agregar entidad
+   //actuar acorde a los datos enviados del form
    profileContainer.on("submit", ".form", (e) => {
       setLoadingScreen()
       handleFormSubmit(e, (result) => {
@@ -60,9 +60,8 @@ export function iniciarPerfil() {
    //cambiar vista en la tabla de admins
    profileContainer.on("click", ".admin-btn", (e) => {
       setbuttonStyle(e)
-      const data = $(e.target).data()
+      const data = $(e.currentTarget).data()
       const table = $("#table-data")
-
       actionAdminBtns(data).done((result) => {
          table.html(result)
       })
@@ -89,16 +88,27 @@ export function iniciarPerfil() {
 
    //funcion generica que maneja el envio de formularios
    function handleFormSubmit(e, onSuccess) {
-      e.preventDefault(e)
-      const form = $(e.target)
-      const data = new FormData(form[0])
+      e.preventDefault()
+      const form = $(e.target)[0]
+      const data = new FormData(form)
 
+      // Verificar el tamaño de las imágenes 
+      const files = data.getAll("imagenes[]")
+
+      for (const file of files) {
+         if (file.size > 10 * 1024 * 1024) { // 10 MB
+            actionModal({ modaltype: "error-imagen" })
+               .done((result) => {
+                  modalContainer.html(result)
+               })
+            return
+         }
+      }
       actionFormData(data)
          .done((result) => {
             onSuccess(result)
-            form[0].reset()
+            form.reset()
          })
-
          .fail(() => console.log("error"))
    }
 
@@ -111,7 +121,7 @@ export function iniciarPerfil() {
 
    function setbuttonStyle(e) {
       adminBtns.removeClass("btn-requested bg-zinc-600").addClass("bg-gray-800")
-      $(e.target).addClass("btn-requested bg-zinc-600").removeClass("bg-gray-800")
+      $(e.currentTarget).addClass("btn-requested bg-zinc-600").removeClass("bg-gray-800")
    }
 }
 

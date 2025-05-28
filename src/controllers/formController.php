@@ -127,4 +127,14 @@ switch ($formType) {
       }
       require __DIR__ . "/../views/partials/modals/operationSuccessful.php";
       break;
+
+   case "change-password":
+      $user_id = $_SESSION["user_id"];
+      $response = updateUserPassword($conexion, $bbdd, $_POST, $user_id);
+      if (!$response) {
+         require __DIR__ . "/../views/partials/modals/passwordError.php";
+         return;
+      }
+      require __DIR__ . "/../views/partials/modals/operationSuccessful.php";
+      break;
 }

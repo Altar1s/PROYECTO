@@ -14,6 +14,9 @@
          class="p-1 h-46 mb-3 resize-none border border-gray-300 rounded"
          name="contenido"
          placeholder="Contenido" required></textarea>
+      <span class="block w-full px-2 py-1 text-xs text-gray-500 font-medium bg-gray-100 rounded mb-1">
+         Solo se admiten imágenes de hasta 10 MB
+      </span>
       <input
          name="imagenes[]"
          type="file"
