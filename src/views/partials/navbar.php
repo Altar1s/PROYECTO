@@ -5,9 +5,11 @@
          <span class="text-white font-semibold text-lg">Tegami</span>
       </a>
       <div class="hidden md:flex items-center gap-6">
-         <a href="<?php echo URL ?>" class="<?= isset($_GET["page"]) ? "text-white" : "text-yellow-500" ?> font-medium hover:text-yellow-500 transition cursor-pointer">Inicio</a>
+         <?php if (isset($_SESSION["logged"])): ?>
+            <a href="<?php echo URL ?>" class="<?= isset($_GET["page"]) ? "text-white" : "text-yellow-500" ?> font-medium hover:text-yellow-500 transition cursor-pointer">Inicio</a>
+         <?php endif ?>
          <?php if (!isset($_SESSION["logged"])): ?>
-            <form class="flex items-center gap-2">
+            <form class="flex items-center gap-2" action="<?php echo URL ?>src/models/loginModel.php" method="post">
                <input
                   type="email"
                   name="correo"
@@ -41,13 +43,14 @@
          <i class="fas fa-times"></i>
       </button>
    </div>
-   <a href="<?php echo URL ?>" class="<?= isset($_GET["page"]) ? "text-white" : "text-yellow-500" ?> flex items-center gap-2 font-medium hover:text-yellow-500 transition cursor-pointer">
-      <i class="fas fa-home text-lg"></i>
-      <span>Inicio</span>
-   </a>
-
+   <?php if (isset($_SESSION["logged"])): ?>
+      <a href="<?php echo URL ?>" class="<?= isset($_GET["page"]) ? "text-white" : "text-yellow-500" ?> flex items-center gap-2 font-medium hover:text-yellow-500 transition cursor-pointer">
+         <i class="fas fa-home text-lg"></i>
+         <span>Inicio</span>
+      </a>
+   <?php endif ?>
    <?php if (!isset($_SESSION["logged"])): ?>
-      <form class="flex flex-col gap-3 mt-2">
+      <form class="flex flex-col gap-3 mt-2" action="<?php echo URL ?>src/models/loginModel.php" method="post">
          <input
             type="email"
             name="correo"
