@@ -149,7 +149,7 @@ function updateUserPassword(mysqli $conexion, string $bbdd, array $data, int $us
    $currentPass = mysqli_real_escape_string($conexion, $data["currentPass"]);
    $newPass = mysqli_real_escape_string($conexion, $data["newPass"]);
 
-   $query = "SELECT id FROM users WHERE id = $user_id AND password = AES_ENCRYPT('$currentPass', 'claveultrasecreta');";
+   $query = "SELECT id FROM users WHERE id = $user_id AND AES_DECRYPT(password, 'claveultrasecreta') = '$currentPass';";
    $result = mysqli_query($conexion, $query);
 
    if (mysqli_num_rows($result) == 1) {

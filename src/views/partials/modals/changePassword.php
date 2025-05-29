@@ -1,4 +1,4 @@
-<div class="form modal fixed inset-0 bg-gray-900/30 backdrop-blur-sm flex items-center justify-center z-50">
+<div class="modal fixed inset-0 bg-gray-900/30 backdrop-blur-sm flex items-center justify-center z-50">
    <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-100">
       <h2 class="text-2xl font-semibold text-gray-800 mb-1">Cambia tu contraseña</h2>
       <form class="form space-y-4">
