@@ -43,7 +43,7 @@ function deleteProfessor(mysqli $conexion, string $bbdd, int $id)
    $row = mysqli_fetch_assoc($result);
    $foto = $row['foto'] ?? null;
 
-   if ($foto) {
+   if ($foto && $foto != "no_photo.png") {
       $filePath = __DIR__ . "/../../media/img/" . $foto;
       if (file_exists($filePath)) {
          unlink($filePath);
