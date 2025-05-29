@@ -13,12 +13,12 @@
          <p class="font-semibold"><span class="text-gray-500">Apellidos: </span><?php echo $rolData['apellidos'] ?></p>
          <p class="font-semibold"><span class="text-gray-500">Correo: </span><?php echo $userData['email'] ?></p>
       </div>
-      <div class="w-full flex justify-start gap-2">
+      <div class="flex w-full flex-col sm:flex-row justify-start gap-2 ">
          <button
             data-modaltype="change-password" class="btn-show-modal bg-yellow-500 py-2 px-4  text-gray-900 font-semibold rounded-lg hover:bg-yellow-600 cursor-pointer hover:ring-2 hover:ring-yellow-400 transition duration-150 ease-in-out shadow-sm">Cambiar contraseña</button>
          <form method="post" action="./src/models/profileOptions.php">
             <input
-               class="bg-red-500 text-white py-2 px-4 rounded-lg font-semibold transition duration-150 ease-in-out hover:bg-red-600 hover:ring-2 hover:ring-red-400 cursor-pointer shadow-sm"
+               class="bg-red-500 text-white w-full py-2 px-4 rounded-lg font-semibold transition duration-150 ease-in-out hover:bg-red-600 hover:ring-2 hover:ring-red-400 cursor-pointer shadow-sm"
                type="submit"
                value="Cerrar Sesión"
                name="cerrar">
