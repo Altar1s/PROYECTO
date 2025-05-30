@@ -77,3 +77,13 @@ function editGroup(mysqli $conexion, string $bbdd, array $data)
    $query = "UPDATE cursos SET nombre = '$nombre', profesor_id = $profesor_id WHERE id = $id";
    mysqli_query($conexion, $query);
 }
+
+function removeStudentFromChat(mysqli $conexion, string $bbdd, array $data)
+{
+   if (!selectDB($conexion, $bbdd)) return false;
+   $chatId = $data["chatId"];
+   $studentId = $data["studentId"];
+   $query = "DELETE FROM cursos_estudiantes WHERE curso_id = $chatId AND estudiante_id = $studentId";
+   mysqli_query($conexion, $query);
+   return true;
+}

@@ -78,4 +78,14 @@ switch ($modaltype) {
    case "change-password":
       require __DIR__ . "/../views/partials/modals/changePassword.php";
       break;
+
+   case "remove-member":
+      $chatId = $_GET["chatId"];
+      $studentId = $_GET["studentId"];
+      require __DIR__ . "/../views/partials/modals/removeMember.php";
+      break;
+
+   case "operation-success":
+      require __DIR__ . "/../views/partials/modals/operationSuccessful.php";
+      break;
 }

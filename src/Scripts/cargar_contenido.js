@@ -55,6 +55,12 @@ export function iniciarHome() {
                placeholder: "Elige una opción...",
                allowClear: true
             })
+            $("#busqueda").on("select2:open", function () {
+               $(".select2-results__options").css({
+                  "max-height": "200px",
+                  "overflow-y": "auto"
+               });
+            });
          })
          .fail(() => console.log("error"))
    })
@@ -146,6 +152,17 @@ export function iniciarHome() {
          })
    })
 
+   //!
+   container.on("click", ".btn-delete-member", (e) => {
+      const btn = $(e.target)
+      const data = btn.data()
+
+      actionModal(data)
+         .done((result) => {
+            console.log(result)
+            modalContainer.html(result)
+         })
+   })
 
    //caso especifico tras añadir un estudiante al chat 
    $("#main").on("submit", "#add-student-to-chat", (e) => {
@@ -215,6 +232,28 @@ export function iniciarHome() {
          .fail(() => console.log("error"))
    })
 
+   //remover miembro del grupo 
+   main.on("click", "#confirm-remove-member", (e) => {
+      const btn = $(e.target)
+      const data = btn.data()
+
+      setLoadingScreen()
+      actionChat(data)
+         .done((result) => {
+            setTimeout(() => {
+               $("#msgDiv").html(result)
+               showOperationSuccess()
+               setTimeout(() => {
+                  modalContainer.html("")
+               }, 1500)
+            }, 2500);
+         })
+
+         .fail(() => console.log("error"))
+   })
+
+
+
    //pasar a vista de edicion de publicacion
    container.on("click", ".edit-post", (e) => {
       if ($("#post-editing").length > 0) {
@@ -254,6 +293,20 @@ export function iniciarHome() {
    function chatSelectedStyle(e) {
       $(".chat-button").removeClass("chat-selected bg-orange-300 shadow-lg scale-95")
       $(e.target).addClass("chat-selected bg-orange-300 shadow-lg scale-95")
+   }
+
+   function setLoadingScreen() {
+      const data = { modaltype: "load" }
+      actionModal(data).done((result) => {
+         modalContainer.html(result)
+      })
+   }
+
+   function showOperationSuccess() {
+      const data = { modaltype: "operation-success" }
+      actionModal(data).done((result) => {
+         modalContainer.html(result)
+      })
    }
 
    function toggleChatButtons() {

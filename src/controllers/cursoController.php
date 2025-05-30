@@ -53,4 +53,12 @@ switch ($type) {
       }
       require __DIR__ . "/../views/partials/chats.php";
       break;
+
+   case "remove-member":
+      if (removeStudentFromChat($conexion, $bbdd, $_GET)) {
+         $chatId = $_GET["chatId"];
+         $members = getEstudiantesDeGrupo($conexion, $bbdd, $chatId);
+         require __DIR__ . "/../views/partials/chatMembers.php";
+      }
+      break;
 }
