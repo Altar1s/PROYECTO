@@ -1,4 +1,4 @@
-import { actionModal, actionTab, actionFormData, actionChat, actionPublication } from "./api.js"
+import { actionModal, actionTab, actionFormData, actionChat, actionPublication, actionSession } from "./api.js"
 
 export function iniciarHome() {
    const menuToggle = $("#menu-toggle")
@@ -22,47 +22,52 @@ export function iniciarHome() {
 
    //renderiza las vistas de los botones de la barra de navegacion
    $(".tab").on("click", (e) => {
-      let tabRequested = $(e.target).data("tab")
+      checkSession()
+         .done(() => {
+            let tabRequested = $(e.target).data("tab")
 
-      if (currentTab == tabRequested) {
-         return
-      }
+            if (currentTab == tabRequested) {
+               return
+            }
 
-      currentTab = tabRequested
-      const data = { tab: tabRequested }
+            currentTab = tabRequested
+            const data = { tab: tabRequested }
 
-      actionTab(data)
-         .done((result) => {
-            container.html(result)
-            cambiarEstilos(e)
-            toggleOverflow()
+            actionTab(data)
+               .done((result) => {
+                  container.html(result)
+                  cambiarEstilos(e)
+                  toggleOverflow()
+               })
+
+               .fail(() => console.log("error"))
          })
-
-         .fail(() => console.log("error"))
    })
 
    //muestra una modal
    $("#contenido").on("click", ".btn-show-modal", (e) => {
-      const data = $(e.currentTarget).data()
+      checkSession().done(() => {
+         const data = $(e.currentTarget).data()
 
-      actionModal(data)
-         .done((result) => {
-            modalContainer.html(result)
-            if (!$(result).hasClass("select2")) {
-               return
-            }
-            $("#busqueda").select2({
-               placeholder: "Elige una opción...",
-               allowClear: true
-            })
-            $("#busqueda").on("select2:open", function () {
-               $(".select2-results__options").css({
-                  "max-height": "200px",
-                  "overflow-y": "auto"
+         actionModal(data)
+            .done((result) => {
+               modalContainer.html(result)
+               if (!$(result).hasClass("select2")) {
+                  return
+               }
+               $("#busqueda").select2({
+                  placeholder: "Elige una opción...",
+                  allowClear: true
+               })
+               $("#busqueda").on("select2:open", function () {
+                  $(".select2-results__options").css({
+                     "max-height": "200px",
+                     "overflow-y": "auto"
+                  });
                });
-            });
-         })
-         .fail(() => console.log("error"))
+            })
+            .fail(() => console.log("error"))
+      })
    })
 
    //cierra la modal al hacer clic al boton con el id cancel-action
@@ -88,80 +93,92 @@ export function iniciarHome() {
 
    //renderiza los chats de los botones del chat (para el responsive)
    container.on("click", ".chat-button", (e) => {
-      const btn = $(e.target)
-      const data = { type: btn.data("type"), id: btn.data("chat-id"), nombre: btn.text() }
-      const chatContainer = $("#chat")
+      checkSession().done(() => {
+         const btn = $(e.target)
+         const data = { type: btn.data("type"), id: btn.data("chat-id"), nombre: btn.text() }
+         const chatContainer = $("#chat")
 
-      actionChat(data)
-         .done((result) => {
-            chatContainer.html(result)
-            chatSelectedStyle(e)
-            $("#chat-btns").removeClass("flex")
-            $("#chat-btns").addClass("hidden")
-            $("#chat").removeClass("hidden")
-            $("#chat").addClass("flex")
-            $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
-         })
+         actionChat(data)
+            .done((result) => {
+               chatContainer.html(result)
+               chatSelectedStyle(e)
+               $("#chat-btns").removeClass("flex")
+               $("#chat-btns").addClass("hidden")
+               $("#chat").removeClass("hidden")
+               $("#chat").addClass("flex")
+               $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
+            })
 
-         .fail(() => console.log("error"))
+            .fail(() => console.log("error"))
+      })
    })
 
    //cargar responsive menu chats
    container.on("click", "#btn-back-btns", (e) => {
-      const data = $(e.currentTarget).data()
+      checkSession().done(() => {
+         const data = $(e.currentTarget).data()
 
-      actionChat(data).done((result) => {
-         container.html(result)
+         actionChat(data).done((result) => {
+            container.html(result)
+         })
       })
    })
 
    //cargar los miembros del chat 
    container.on("click", ".btn-show-members", (e) => {
-      const btn = $(e.currentTarget)
-      const data = { type: btn.data("type"), id: btn.data("chat-id") }
-      const membersContainer = $("#msgDiv")
+      checkSession().done(() => {
+         const btn = $(e.currentTarget)
+         const data = { type: btn.data("type"), id: btn.data("chat-id") }
+         const membersContainer = $("#msgDiv")
 
-      actionChat(data).done((result) => {
-         membersContainer.html(result)
-         toggleChatButtons()
+         actionChat(data).done((result) => {
+            membersContainer.html(result)
+            toggleChatButtons()
+         })
       })
    })
 
    //volver a la vista del chat principal
    container.on("click", ".btn-show-chat", (e) => {
-      const btn = $(e.currentTarget)
-      const data = { type: btn.data("type"), id: btn.data("chat-id"), nombre: btn.data("chat-name") }
-      const chatContainer = $("#chat")
+      checkSession().done(() => {
+         const btn = $(e.currentTarget)
+         const data = { type: btn.data("type"), id: btn.data("chat-id"), nombre: btn.data("chat-name") }
+         const chatContainer = $("#chat")
 
-      actionChat(data).done((result) => {
-         chatContainer.html(result)
-         $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
+         actionChat(data).done((result) => {
+            chatContainer.html(result)
+            $("#msgDiv").scrollTop($("#msgDiv")[0].scrollHeight)
+         })
       })
    })
 
    //ver notas del estudiante del chat
    container.on("click", ".btn-student-grades", (e) => {
-      const btn = $(e.target)
-      const data = { type: btn.data("type"), studentId: btn.data("student-id"), chatId: btn.data("chat-id") }
-      const gradesContainer = $("#msgDiv")
+      checkSession().done(() => {
+         const btn = $(e.target)
+         const data = { type: btn.data("type"), studentId: btn.data("student-id"), chatId: btn.data("chat-id") }
+         const gradesContainer = $("#msgDiv")
 
-      actionChat(data)
-         .done((result) => {
-            gradesContainer.html(result)
-            toggleChatButtons()
-         })
+         actionChat(data)
+            .done((result) => {
+               gradesContainer.html(result)
+               toggleChatButtons()
+            })
+      })
    })
 
-   //!
+   //eliminar miembro del grupo
    container.on("click", ".btn-delete-member", (e) => {
-      const btn = $(e.target)
-      const data = btn.data()
+      checkSession().done(() => {
+         const btn = $(e.target)
+         const data = btn.data()
 
-      actionModal(data)
-         .done((result) => {
-            console.log(result)
-            modalContainer.html(result)
-         })
+         actionModal(data)
+            .done((result) => {
+               console.log(result)
+               modalContainer.html(result)
+            })
+      })
    })
 
    //caso especifico tras añadir un estudiante al chat 
@@ -182,28 +199,30 @@ export function iniciarHome() {
    //funcion generica para manejar el submit de los formularios
    function handleFormSubmit(e, onSuccess) {
       e.preventDefault()
-      const form = $(e.target)[0]
-      const data = new FormData(form)
+      checkSession().done(() => {
+         const form = $(e.target)[0]
+         const data = new FormData(form)
 
-      // Verificar el tamaño de las imágenes 
-      const files = data.getAll("imagenes[]")
+         // Verificar el tamaño de las imágenes 
+         const files = data.getAll("imagenes[]")
 
-      for (const file of files) {
-         if (file.size > 10 * 1024 * 1024) { // 10 MB
-            actionModal({ modaltype: "error-imagen" })
-               .done((result) => {
-                  modalContainer.html(result)
-               })
-            return
+         for (const file of files) {
+            if (file.size > 10 * 1024 * 1024) { // 10 MB
+               actionModal({ modaltype: "error-imagen" })
+                  .done((result) => {
+                     modalContainer.html(result)
+                  })
+               return
+            }
          }
-      }
 
-      actionFormData(data)
-         .done((result) => {
-            onSuccess(result)
-            form.reset()
-         })
-         .fail(() => console.log("error"))
+         actionFormData(data)
+            .done((result) => {
+               onSuccess(result)
+               form.reset()
+            })
+            .fail(() => console.log("error"))
+      })
    }
 
    //cambiar notas de un estudiante
@@ -220,58 +239,63 @@ export function iniciarHome() {
 
    //confirmar eliminacion de publicacion
    main.on("click", "#confirm-delete-post", (e) => {
+      checkSession().done(() => {
+         actionPublication(data)
+            .done((result) => {
+               container.html(result)
+               btn.closest(".modal").remove()
+            })
+
+            .fail(() => console.log("error"))
+      })
       const btn = $(e.target)
       const data = btn.data()
-
-      actionPublication(data)
-         .done((result) => {
-            container.html(result)
-            btn.closest(".modal").remove()
-         })
-
-         .fail(() => console.log("error"))
    })
 
    //remover miembro del grupo 
    main.on("click", "#confirm-remove-member", (e) => {
-      const btn = $(e.target)
-      const data = btn.data()
+      checkSession().done(() => {
+         const btn = $(e.target)
+         const data = btn.data()
 
-      setLoadingScreen()
-      actionChat(data)
-         .done((result) => {
-            setTimeout(() => {
-               $("#msgDiv").html(result)
-               showOperationSuccess()
+         setLoadingScreen()
+         actionChat(data)
+            .done((result) => {
                setTimeout(() => {
-                  modalContainer.html("")
-               }, 1500)
-            }, 2500);
-         })
+                  $("#msgDiv").html(result)
+                  showOperationSuccess()
+                  setTimeout(() => {
+                     modalContainer.html("")
+                  }, 1500)
+               }, 2500);
+            })
 
-         .fail(() => console.log("error"))
+            .fail(() => console.log("error"))
+      })
    })
 
 
 
    //pasar a vista de edicion de publicacion
    container.on("click", ".edit-post", (e) => {
-      if ($("#post-editing").length > 0) {
-         $("#post-editing").closest(".post").find(".text-content").removeClass("hidden")
-         $("#post-editing").remove()
-      }
-      const btn = $(e.currentTarget)
-      const data = btn.data()
-      const edit = btn.closest(".post").find(".editable-content")
-      const textContent = btn.closest(".text-content")
+      checkSession().done(() => {
+         if ($("#post-editing").length > 0) {
+            $("#post-editing").closest(".post").find(".text-content").removeClass("hidden")
+            $("#post-editing").remove()
+         }
+         const btn = $(e.currentTarget)
+         const data = btn.data()
+         const edit = btn.closest(".post").find(".editable-content")
+         const textContent = btn.closest(".text-content")
 
-      actionPublication(data)
-         .done((result) => {
-            edit.html(result)
-            textContent.addClass("hidden")
-         })
+         actionPublication(data)
+            .done((result) => {
+               edit.html(result)
+               textContent.addClass("hidden")
+            })
 
-         .fail(() => console.log("error"))
+            .fail(() => console.log("error"))
+      })
    })
 
    //cancelar edicion de publicacion
@@ -288,7 +312,22 @@ export function iniciarHome() {
       })
    })
 
+   //revisa si la sesion sigue activa
+   function checkSession() {
+      const deferred = $.Deferred()
 
+      actionSession()
+         .done((response) => {
+            if (!response.isActive) {
+               window.location.href = response.href
+               deferred.reject()
+            } else {
+               deferred.resolve()
+            }
+         })
+
+      return deferred.promise();
+   }
 
    function chatSelectedStyle(e) {
       $(".chat-button").removeClass("chat-selected bg-orange-300 shadow-lg scale-95")

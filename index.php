@@ -22,6 +22,7 @@
       session_start();
    }
 
+   require_once __DIR__ . "/src/includes/session.php";
    require_once __DIR__ . "/src/includes/config.php";
    require_once __DIR__ . "/src/includes/conexion.php";
    require_once __DIR__ . "/src/includes/auth.php";
@@ -39,7 +40,6 @@
             break;
          case "perfil":
             require_once __DIR__ . "/src/controllers/perfilController.php";
-            authLogged();
             showProfilePage($conexion, $bbdd, $_SESSION["user_id"]);
             break;
          default:

@@ -18,6 +18,7 @@ if (isset($_POST["enviar"])) {
             $_SESSION["user_id"] = $resultado["id"];
             $_SESSION["usuario"] = $resultado["email"];
             $_SESSION["rol"] = $resultado["rol"];
+            $_SESSION["hora"] = time();
             header("Location: ./../../index.php?status=success");
             exit();
          } else {

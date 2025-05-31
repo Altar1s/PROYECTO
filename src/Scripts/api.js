@@ -70,3 +70,11 @@ export function actionDelete(data) {
 
    return apiRequest(url, method, dataType, data)
 }
+
+export function actionSession() {
+   const url = "./src/controllers/checkSession.php"
+   const method = "GET"
+   const dataType = "JSON"
+
+   return apiRequest(url, method, dataType)
+}
