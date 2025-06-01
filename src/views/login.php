@@ -1,13 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-   session_start();
-}
-if (isset($_SESSION["logged"])) {
-   header("Location: index.php?page=home");
-   exit;
-}
-?>
-
 <div class="flex flex-col items-center justify-center min-h-[70vh] px-2 sm:px-4">
    <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-4 sm:p-6 md:p-8 border border-gray-200">
       <h1 class="text-2xl font-semibold text-center text-gray-800 mb-4 sm:mb-6">Iniciar sesión</h1>

@@ -1,3 +1,6 @@
+<?php
+require_once __DIR__ . "/../includes/session.php";
+?>
 <div class="flex gap-4 justify-end">
    <button class="shadow-xs  py-3 px-6 bg-[#fcfcfc] text-slate-700  text-sm font-semibold rounded-t-lg hover:cursor-pointer focus:outline-none transition-all duration-150 ease-in-out">
       Perfil

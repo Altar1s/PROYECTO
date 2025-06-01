@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . "/src/includes/config.php";
+require_once __DIR__ . "/src/includes/conexion.php";
+?>
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 
@@ -17,13 +21,13 @@
 
 <body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
    <?php
+   if (isset($_SESSION)) {
+      print_r($_SESSION);
+   }
    if (session_status() === PHP_SESSION_NONE) {
       session_start();
    }
 
-   require_once __DIR__ . "/src/includes/session.php";
-   require_once __DIR__ . "/src/includes/config.php";
-   require_once __DIR__ . "/src/includes/conexion.php";
    require_once __DIR__ . "/src/views/partials/navbar.php";
 
    $page = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET["page"] ?? "Log in");
@@ -41,6 +45,13 @@
             showProfilePage($conexion, $bbdd, $_SESSION["user_id"]);
             break;
          case "Login":
+            if (session_status() == PHP_SESSION_NONE) {
+               session_start();
+            }
+            if (isset($_SESSION["logged"]) && !isset($_GET["page"])) {
+               header("Location: ./index.php?page=home");
+               exit;
+            }
             require_once __DIR__ . "/src/views/login.php";
             break;
          default:

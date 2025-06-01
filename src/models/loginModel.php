@@ -13,6 +13,7 @@ if (isset($_POST["enviar"])) {
          if (mysqli_num_rows($resultado) == 1) {
             session_destroy();
             session_start();
+            session_regenerate_id(true);
             $resultado = mysqli_fetch_array($resultado);
             $_SESSION["logged"] = true;
             $_SESSION["user_id"] = $resultado["id"];

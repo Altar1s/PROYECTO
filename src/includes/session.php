@@ -3,8 +3,13 @@ if (session_status() == PHP_SESSION_NONE) {
    session_start();
 }
 
+if (isset($_SESSION["logged"]) && !isset($_GET["page"])) {
+   header("Location: ./index.php?page=home");
+   exit;
+}
+
 if (!isset($_SESSION["logged"]) && isset($_GET["page"])) {
-   header("Location: index.php?status=nologged");
+   header("Location: ./index.php?status=nologged");
    exit;
 }
 
