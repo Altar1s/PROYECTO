@@ -19,7 +19,7 @@ if (isset($_POST["enviar"])) {
             $_SESSION["usuario"] = $resultado["email"];
             $_SESSION["rol"] = $resultado["rol"];
             $_SESSION["hora"] = time();
-            header("Location: ./../../index.php?status=success");
+            header("Location: ./../../index.php?page=home");
             exit();
          } else {
             header("Location: ./../../index.php?status=error");

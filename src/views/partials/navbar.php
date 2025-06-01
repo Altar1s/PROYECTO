@@ -6,71 +6,34 @@
       </a>
       <div class="hidden md:flex items-center gap-6">
          <?php if (isset($_SESSION["logged"])): ?>
-            <a href="<?php echo URL ?>" class="<?= isset($_GET["page"]) ? "text-white" : "text-yellow-500" ?> font-medium hover:text-yellow-500 transition cursor-pointer">Inicio</a>
-         <?php endif ?>
-         <?php if (!isset($_SESSION["logged"])): ?>
-            <form class="flex items-center gap-2" action="<?php echo URL ?>src/models/loginModel.php" method="post">
-               <input
-                  type="email"
-                  name="correo"
-                  placeholder="Usuario"
-                  class="bg-gray-700 text-white border border-gray-600 rounded py-1 px-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition cursor-pointer">
-               <input
-                  type="password"
-                  name="clave"
-                  placeholder="Contraseña"
-                  class="bg-gray-700 text-white border border-gray-600 rounded py-1 px-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition cursor-pointer">
-               <input
-                  type="submit"
-                  name="enviar"
-                  value="Iniciar Sesión"
-                  class="bg-yellow-500 text-gray-900 font-semibold rounded py-1 px-3 hover:bg-yellow-600 cursor-pointer transition">
-            </form>
-         <?php else: ?>
-            <a id="profile-btn" href="<?php echo URL ?>index.php?page=perfil" class="<?= isset($_GET["page"]) ? "text-yellow-500" : "text-white" ?> font-medium hover:text-yellow-500 transition cursor-pointer">Perfil</a>
+            <a href="<?php echo URL ?>index.php?page=home" class="<?= ($_GET["page"] == 'perfil') ? "text-white" : "text-yellow-500" ?> font-medium hover:text-yellow-500 transition cursor-pointer">Inicio</a>
+            <a id="profile-btn" href="<?php echo URL ?>index.php?page=perfil" class="<?= ($_GET["page"] == "perfil") ? "text-yellow-500" : "text-white" ?> font-medium hover:text-yellow-500 transition cursor-pointer">Perfil</a>
          <?php endif ?>
       </div>
-      <div class="md:hidden cursor-pointer">
-         <button id="menu-toggle" class="text-white text-2xl focus:outline-none hover:text-yellow-500 transition cursor-pointer">
-            <i class="fas fa-bars"></i>
-         </button>
-      </div>
+      <?php if (isset($_SESSION["logged"])): ?>
+         <div class="md:hidden cursor-pointer">
+            <button id="menu-toggle" class="text-white text-2xl focus:outline-none hover:text-yellow-500 transition cursor-pointer">
+               <i class="fas fa-bars"></i>
+            </button>
+         </div>
+      <?php endif ?>
    </div>
 </nav>
-<div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-gray-900 shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 p-4 flex flex-col gap-4">
-   <div class="flex justify-end cursor-pointer">
-      <button id="menu-close" class="text-white text-2xl focus:outline-none hover:text-yellow-500 transition cursor-pointer">
-         <i class="fas fa-times"></i>
-      </button>
-   </div>
-   <?php if (isset($_SESSION["logged"])): ?>
-      <a href="<?php echo URL ?>" class="<?= isset($_GET["page"]) ? "text-white" : "text-yellow-500" ?> flex items-center gap-2 font-medium hover:text-yellow-500 transition cursor-pointer">
+<?php if (isset($_SESSION["logged"])): ?>
+   <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-gray-900 shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 p-4 flex flex-col gap-4">
+      <div class="flex justify-end cursor-pointer">
+         <button id="menu-close" class="text-white text-2xl focus:outline-none hover:text-yellow-500 transition cursor-pointer">
+            <i class="fas fa-times"></i>
+         </button>
+      </div>
+
+      <a href="<?php echo URL ?>index.php?page=home" class="<?= ($_GET["page"] == "perfil") ? "text-white" : "text-yellow-500" ?> flex items-center gap-2 font-medium hover:text-yellow-500 transition cursor-pointer">
          <i class="fas fa-home text-lg"></i>
          <span>Inicio</span>
       </a>
-   <?php endif ?>
-   <?php if (!isset($_SESSION["logged"])): ?>
-      <form class="flex flex-col gap-3 mt-2" action="<?php echo URL ?>src/models/loginModel.php" method="post">
-         <input
-            type="email"
-            name="correo"
-            placeholder="Usuario"
-            class="bg-gray-700 text-white border border-gray-600 rounded py-1 px-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition cursor-pointer">
-         <input
-            type="password"
-            name="clave"
-            placeholder="Contraseña"
-            class="bg-gray-700 text-white border border-gray-600 rounded py-1 px-3 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition cursor-pointer">
-         <input
-            type="submit"
-            name="enviar"
-            value="Iniciar Sesión"
-            class="bg-yellow-500 text-gray-900 font-semibold rounded py-1 px-3 hover:bg-yellow-600 cursor-pointer transition">
-      </form>
-   <?php else: ?>
-      <a id="profile-btn" href="<?php echo URL ?>index.php?page=perfil" class="<?= isset($_GET["page"]) ? "text-yellow-500" : "text-white" ?> flex items-center gap-2 font-medium hover:text-yellow-500 transition cursor-pointer">
+      <a id="profile-btn" href="<?php echo URL ?>index.php?page=perfil" class="<?= ($_GET["page"] == "perfil") ? "text-yellow-500" : "text-white" ?> flex items-center gap-2 font-medium hover:text-yellow-500 transition cursor-pointer">
          <i class="fas fa-user text-lg"></i>
          <span>Perfil</span>
       </a>
-   <?php endif ?>
-</div>
+   </div>
+<?php endif ?>

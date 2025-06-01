@@ -12,11 +12,10 @@
    <!-- CSS y JS de Select2 -->
    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-   <title><?php echo htmlspecialchars($_GET["page"] ?? "home"); ?></title>
+   <title><?php echo htmlspecialchars($_GET["page"] ?? "Log in"); ?></title>
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
-
    <?php
    if (session_status() === PHP_SESSION_NONE) {
       session_start();
@@ -27,7 +26,7 @@
    require_once __DIR__ . "/src/includes/conexion.php";
    require_once __DIR__ . "/src/views/partials/navbar.php";
 
-   $page = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET["page"] ?? "home");
+   $page = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET["page"] ?? "Log in");
    ?>
 
    <main id="main" class="flex flex-col flex-1 container mx-auto px-4 py-6 max-w-7xl" data-rol="<?php echo htmlspecialchars($_SESSION["rol"] ?? ''); ?>">
@@ -41,6 +40,9 @@
             require_once __DIR__ . "/src/controllers/perfilController.php";
             showProfilePage($conexion, $bbdd, $_SESSION["user_id"]);
             break;
+         case "Login":
+            require_once __DIR__ . "/src/views/login.php";
+            break;
          default:
             echo "<h1 class='text-2xl font-semibold text-center text-red-600'>404 - Página No Encontrada</h1>";
             break;
@@ -49,7 +51,6 @@
    </main>
 
    <?php require_once __DIR__ . "/src/views/partials/footer.php"; ?>
-
 </body>
 
 </html>
