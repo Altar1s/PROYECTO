@@ -21,9 +21,6 @@ require_once __DIR__ . "/src/includes/conexion.php";
 
 <body class="flex flex-col min-h-screen bg-gray-100 text-gray-800">
    <?php
-   if (isset($_SESSION)) {
-      print_r($_SESSION);
-   }
    if (session_status() === PHP_SESSION_NONE) {
       session_start();
    }
